@@ -14,16 +14,28 @@ const FALLBACK = {
 function EngineeringBackground({ variant = 'hero' }) {
   return (
     <div className={`eng-bg eng-bg-${variant}`} aria-hidden="true">
-      <svg viewBox="0 0 100 100" className="eng-icon icon-fan animate-spin-slow">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="6 4" opacity="0.6"/>
-        <circle cx="50" cy="50" r="14" fill="none" stroke="currentColor" strokeWidth="3" />
-        <path d="M50 36 C50 18 64 8 72 10 C74 22 62 34 50 36Z" fill="currentColor" opacity="0.85" />
-        <path d="M62 44 C80 36 90 46 90 54 C78 60 64 52 62 44Z" fill="currentColor" opacity="0.85" />
-        <path d="M62 56 C70 74 64 88 56 90 C48 82 54 66 62 56Z" fill="currentColor" opacity="0.85" />
-        <path d="M50 64 C50 82 36 92 28 90 C26 78 38 66 50 64Z" fill="currentColor" opacity="0.85" />
-        <path d="M38 56 C20 64 10 54 10 46 C22 40 36 48 38 56Z" fill="currentColor" opacity="0.85" />
-        <path d="M38 44 C30 26 36 12 44 10 C52 18 46 34 38 44Z" fill="currentColor" opacity="0.85" />
-        <circle cx="50" cy="50" r="5" fill="currentColor" />
+      <svg viewBox="0 0 110 110" className="eng-icon icon-pencil animate-pencil-draft" aria-hidden="true">
+        <circle cx="55" cy="55" r="48" fill="none" stroke="currentColor" strokeWidth="1.2" strokeDasharray="5 5" opacity="0.32" />
+        <path d="M 28 32 A 44 44 0 0 1 88 42" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.45" />
+        <path d="M 14 18 L 24 18 M 19 13 L 19 23" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
+        <path d="M 92 98 L 102 98 M 97 93 L 97 103" stroke="currentColor" strokeWidth="1.5" opacity="0.5" />
+        <path d="M 80 91 L 96 101 M 96 101 L 105 97" stroke="currentColor" strokeWidth="2" strokeDasharray="4 3" opacity="0.75" />
+        <circle cx="80" cy="91" r="2.5" fill="currentColor" opacity="0.9" />
+        <g transform="translate(55, 55) rotate(35)">
+          <path d="M -7.5 -38 L -7.5 -45 C -7.5 -48, 7.5 -48, 7.5 -45 L 7.5 -38 Z" fill="#e85c60" stroke="#0e1726" strokeWidth="1.5" />
+          <rect x="-8" y="-38" width="16" height="9" rx="1" fill="#94a3b8" stroke="#0e1726" strokeWidth="1.4" />
+          <line x1="-8" y1="-34" x2="8" y2="-34" stroke="#cbd5e1" strokeWidth="1" />
+          <line x1="-8" y1="-31" x2="8" y2="-31" stroke="#475569" strokeWidth="1" />
+          <rect x="-8" y="-29" width="5.3" height="49" fill="#eab308" />
+          <rect x="-2.7" y="-29" width="5.4" height="49" fill="#ffdf24" />
+          <rect x="2.7" y="-29" width="5.3" height="49" fill="#facc15" />
+          <rect x="-8" y="-29" width="16" height="49" fill="none" stroke="#0e1726" strokeWidth="1.5" />
+          <line x1="-2.7" y1="-29" x2="-2.7" y2="20" stroke="#0e1726" strokeWidth="1.2" />
+          <line x1="2.7" y1="-29" x2="2.7" y2="20" stroke="#0e1726" strokeWidth="1.2" />
+          <polygon points="-8,20 8,20 0,44" fill="#edd9b4" stroke="#0e1726" strokeWidth="1.4" />
+          <path d="M -8 20 Q -5.3 22.5 -2.7 20 Q 0 23.5 2.7 20 Q 5.3 22.5 8 20" fill="none" stroke="#0e1726" strokeWidth="1.2" />
+          <polygon points="-3.5,33.5 3.5,33.5 0,44" fill="#0f172a" stroke="#0e1726" strokeWidth="1" />
+        </g>
       </svg>
       <svg viewBox="0 0 80 80" className="eng-icon icon-bolt animate-float-1">
         <path d="M44 8 L22 42 L40 42 L34 72 L62 34 L44 34 Z" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinejoin="round" />

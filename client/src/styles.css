@@ -25,14 +25,15 @@
 }
 
 /* Hero Section Placements - High Visibility */
+.eng-bg-hero .icon-pencil,
 .eng-bg-hero .icon-fan {
-  width: 160px;
-  height: 160px;
-  top: 5%;
-  left: 1%;
+  width: 165px;
+  height: 165px;
+  top: 4%;
+  left: 1.5%;
   color: #ffdf24;
-  opacity: 0.52;
-  filter: drop-shadow(0 0 18px rgba(255, 223, 36, 0.45));
+  opacity: 0.58;
+  filter: drop-shadow(0 0 20px rgba(255, 223, 36, 0.5));
 }
 .eng-bg-hero .icon-bolt {
   width: 95px;
@@ -94,13 +95,14 @@
   opacity: 0.26;
   filter: drop-shadow(0 4px 14px rgba(8, 119, 201, 0.2));
 }
+.eng-bg-light .icon-pencil,
 .eng-bg-light .icon-fan {
   width: 140px;
   height: 140px;
   top: 4%;
   right: 2%;
   color: #0877c9;
-  opacity: 0.28;
+  opacity: 0.32;
 }
 .eng-bg-light .icon-gear {
   width: 130px;
@@ -144,13 +146,14 @@
 }
 
 /* Dark Band Section Placements */
+.eng-bg-band .icon-pencil,
 .eng-bg-band .icon-fan {
   width: 130px;
   height: 130px;
   top: -15px;
   right: 7%;
   color: #ffdf24;
-  opacity: 0.48;
+  opacity: 0.52;
   filter: drop-shadow(0 0 16px rgba(255, 223, 36, 0.4));
 }
 .eng-bg-band .icon-gear {
@@ -176,13 +179,14 @@
 .eng-bg-band .icon-compass { display: none; }
 
 /* Page Hero Placements (About, Services, Projects, Contact) */
+.eng-bg-page .icon-pencil,
 .eng-bg-page .icon-fan {
   width: 125px;
   height: 125px;
   top: 8%;
   right: 26%;
   color: #ffdf24;
-  opacity: 0.46;
+  opacity: 0.50;
   filter: drop-shadow(0 0 16px rgba(255, 223, 36, 0.4));
 }
 .eng-bg-page .icon-gear {
@@ -229,6 +233,22 @@
   0% { left: -50%; }
   45% { left: 110%; }
   100% { left: 110%; }
+}
+
+@keyframes pencilDraftFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  35% {
+    transform: translateY(-14px) rotate(4deg);
+  }
+  70% {
+    transform: translateY(-6px) rotate(-3deg);
+  }
+}
+.animate-pencil-draft {
+  animation: pencilDraftFloat 8s ease-in-out infinite;
+  transform-origin: 55px 55px;
 }
 
 @keyframes spinSlow {
@@ -322,10 +342,11 @@
 }
 
 @media(max-width: 720px) {
+  .eng-bg .icon-pencil,
   .eng-bg .icon-fan,
   .eng-bg .icon-gear {
     transform: scale(0.65);
-    opacity: 0.12;
+    opacity: 0.15;
   }
   .eng-bg .icon-pipe,
   .eng-bg .icon-fire,
