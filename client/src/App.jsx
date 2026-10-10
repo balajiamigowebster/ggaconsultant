@@ -25,7 +25,9 @@ function Header({ settings }) {
   const [open, setOpen] = useState(false);
   const nav = [['Home','/'],['About Us','/about-us'],['Services','/services'],['Projects','/projects'],['Contact Us','/contact-us']];
   return <header className="site-header"><div className="container nav-wrap">
-    <Link to="/" className="brand" aria-label="GGA home"><span className="brand-pencil">✎</span><span className="brand-letters">GGA<small>GET GREAT ADVICE</small></span></Link>
+    <Link to="/" className="brand" aria-label="GGA home">
+      <img src="/images/gga-logo.jpg" alt="GGA - GET GREAT ADVICE" className="brand-logo-img" />
+    </Link>
     <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Toggle menu">☰</button>
     <nav className={open ? 'nav-links open' : 'nav-links'}>{nav.map(([label,path]) => <NavLink key={path} to={path} end={path==='/'} onClick={()=>setOpen(false)}>{label}</NavLink>)}</nav>
     <a className="nav-cta" href={WA} target="_blank" rel="noreferrer">WhatsApp us ↗</a>
@@ -100,7 +102,7 @@ function Contact() {
 }
 
 function Footer({settings}) {
- return <footer className="footer"><div className="container footer-main"><div><Link to="/" className="brand footer-brand"><span className="brand-pencil">✎</span><span className="brand-letters">GGA<small>GET GREAT ADVICE</small></span></Link><p>MEP design consultants supporting coordinated building-services design.</p></div><div><h4>EXPLORE</h4><Link to="/about-us">About Us</Link><Link to="/services">Services</Link><Link to="/projects">Projects</Link><Link to="/contact-us">Contact</Link></div><div><h4>GET IN TOUCH</h4><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a><a href={WA} target="_blank" rel="noreferrer">WhatsApp ↗</a></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} GGA Design Consultants</span><span>*Experience statement based on the company profile; verify before publishing.</span></div></footer>;
+ return <footer className="footer"><div className="container footer-main"><div><Link to="/" className="brand footer-brand" aria-label="GGA home"><img src="/images/gga-logo.jpg" alt="GGA - GET GREAT ADVICE" className="brand-logo-img footer-logo-img" /></Link><p>MEP design consultants supporting coordinated building-services design.</p></div><div><h4>EXPLORE</h4><Link to="/about-us">About Us</Link><Link to="/services">Services</Link><Link to="/projects">Projects</Link><Link to="/contact-us">Contact</Link></div><div><h4>GET IN TOUCH</h4><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a><a href={WA} target="_blank" rel="noreferrer">WhatsApp ↗</a></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} GGA Design Consultants</span><span>*Experience statement based on the company profile; verify before publishing.</span></div></footer>;
 }
 
 function FloatingActions({ settings }) {
