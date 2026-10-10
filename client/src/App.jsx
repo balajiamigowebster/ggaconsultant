@@ -103,7 +103,44 @@ function Footer({settings}) {
  return <footer className="footer"><div className="container footer-main"><div><Link to="/" className="brand footer-brand"><span className="brand-pencil">✎</span><span className="brand-letters">GGA<small>GET GREAT ADVICE</small></span></Link><p>MEP design consultants supporting coordinated building-services design.</p></div><div><h4>EXPLORE</h4><Link to="/about-us">About Us</Link><Link to="/services">Services</Link><Link to="/projects">Projects</Link><Link to="/contact-us">Contact</Link></div><div><h4>GET IN TOUCH</h4><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a><a href={WA} target="_blank" rel="noreferrer">WhatsApp ↗</a></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} GGA Design Consultants</span><span>*Experience statement based on the company profile; verify before publishing.</span></div></footer>;
 }
 
+function FloatingActions({ settings }) {
+  const phone = settings?.contact_phone || '+91 8489274385';
+  const cleanPhone = phone.replace(/[^\d+]/g, '');
+  const waUrl = settings?.whatsapp_number
+    ? `https://wa.me/${String(settings.whatsapp_number).replace(/\D/g, '')}?text=${encodeURIComponent('Hello GGA, I would like to discuss an MEP design requirement.')}`
+    : WA;
+
+  return (
+    <aside className="floating-actions" aria-label="Quick contact options">
+      <a
+        className="floating-btn floating-phone"
+        href={`tel:${cleanPhone}`}
+        aria-label="Call GGA MEP Consultants"
+        title="Call Us"
+      >
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+          <path d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2z"/>
+        </svg>
+        <span className="floating-tooltip">Call Us</span>
+      </a>
+      <a
+        className="floating-btn floating-wa"
+        href={waUrl}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Chat with GGA on WhatsApp"
+        title="Chat on WhatsApp"
+      >
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+          <path d="M12.031 2C6.496 2 2 6.496 2 12.031c0 1.97.57 3.805 1.554 5.358L2 22l4.757-1.516c1.498.906 3.25 1.42 5.12 1.42 5.535 0 10.031-4.496 10.031-10.031C21.908 6.496 17.566 2 12.031 2zm0 18.257c-1.688 0-3.26-.504-4.59-1.37l-.33-.215-2.822.899.914-2.738-.236-.35a8.214 8.214 0 0 1-1.282-4.452c0-4.57 3.716-8.286 8.286-8.286 4.57 0 8.286 3.716 8.286 8.286 0 4.57-3.716 8.286-8.286 8.286zm4.536-6.195c-.249-.125-1.472-.726-1.7-.809-.228-.083-.394-.125-.56.125-.166.249-.643.809-.788.975-.145.166-.29.187-.539.062-.249-.125-1.05-.387-2-1.234-.739-.659-1.238-1.473-1.383-1.722-.145-.249-.015-.383.109-.507.112-.112.249-.29.373-.435.124-.145.166-.249.249-.415.083-.166.041-.311-.021-.435-.062-.124-.56-1.349-.768-1.847-.202-.485-.407-.419-.56-.427l-.477-.008c-.166 0-.435.062-.663.311-.228.249-.87 1.017-.87 2.479 0 1.462 1.064 2.875 1.213 3.082.149.207 2.095 3.2 5.076 4.487.709.307 1.263.49 1.695.627.712.227 1.36.195 1.872.119.571-.085 1.758-.718 2.007-1.412.249-.694.249-1.289.174-1.414-.075-.125-.241-.207-.49-.332z"/>
+        </svg>
+        <span className="floating-tooltip">WhatsApp</span>
+      </a>
+    </aside>
+  );
+}
+
 export default function App() {
  const settings=useData('/settings',{});
- return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<ContentPage/>}/><Route path="/services" element={<ContentPage/>}/><Route path="/projects" element={<ContentPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><a className="floating-wa" href={WA} target="_blank" rel="noreferrer" aria-label="Chat on WhatsApp">◉</a></>;
+ return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<ContentPage/>}/><Route path="/services" element={<ContentPage/>}/><Route path="/projects" element={<ContentPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
 }
