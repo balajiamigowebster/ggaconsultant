@@ -11,6 +11,60 @@ const FALLBACK = {
   'contact-us': { title:'Contact GGA', subtitle:'Discuss your next MEP design requirement.', body:'Contact us to discuss project scope, design coordination, technical support and documentation requirements.' }
 };
 
+function EngineeringBackground({ variant = 'hero' }) {
+  return (
+    <div className={`eng-bg eng-bg-${variant}`} aria-hidden="true">
+      <svg viewBox="0 0 100 100" className="eng-icon icon-fan animate-spin-slow">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="6 4" opacity="0.6"/>
+        <circle cx="50" cy="50" r="14" fill="none" stroke="currentColor" strokeWidth="3" />
+        <path d="M50 36 C50 18 64 8 72 10 C74 22 62 34 50 36Z" fill="currentColor" opacity="0.85" />
+        <path d="M62 44 C80 36 90 46 90 54 C78 60 64 52 62 44Z" fill="currentColor" opacity="0.85" />
+        <path d="M62 56 C70 74 64 88 56 90 C48 82 54 66 62 56Z" fill="currentColor" opacity="0.85" />
+        <path d="M50 64 C50 82 36 92 28 90 C26 78 38 66 50 64Z" fill="currentColor" opacity="0.85" />
+        <path d="M38 56 C20 64 10 54 10 46 C22 40 36 48 38 56Z" fill="currentColor" opacity="0.85" />
+        <path d="M38 44 C30 26 36 12 44 10 C52 18 46 34 38 44Z" fill="currentColor" opacity="0.85" />
+        <circle cx="50" cy="50" r="5" fill="currentColor" />
+      </svg>
+      <svg viewBox="0 0 80 80" className="eng-icon icon-bolt animate-float-1">
+        <path d="M44 8 L22 42 L40 42 L34 72 L62 34 L44 34 Z" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinejoin="round" />
+        <circle cx="44" cy="8" r="3.5" fill="currentColor" />
+        <circle cx="34" cy="72" r="3.5" fill="currentColor" />
+        <line x1="8" y1="42" x2="22" y2="42" stroke="currentColor" strokeWidth="2" strokeDasharray="3 3" />
+        <line x1="62" y1="34" x2="74" y2="34" stroke="currentColor" strokeWidth="2" strokeDasharray="3 3" />
+        <circle cx="8" cy="42" r="2.5" fill="currentColor" />
+        <circle cx="74" cy="34" r="2.5" fill="currentColor" />
+      </svg>
+      <svg viewBox="0 0 90 90" className="eng-icon icon-pipe animate-float-2">
+        <rect x="10" y="42" width="70" height="12" rx="3" fill="none" stroke="currentColor" strokeWidth="3" />
+        <rect x="39" y="48" width="12" height="34" rx="2" fill="none" stroke="currentColor" strokeWidth="3" />
+        <line x1="45" y1="16" x2="45" y2="42" stroke="currentColor" strokeWidth="3.5" />
+        <circle cx="45" cy="16" r="13" fill="none" stroke="currentColor" strokeWidth="3" />
+        <circle cx="45" cy="16" r="3.5" fill="currentColor" />
+        <path d="M22 48 L32 48 M28 44 L34 48 L28 52" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      </svg>
+      <svg viewBox="0 0 90 90" className="eng-icon icon-fire animate-float-3">
+        <path d="M45 10 L45 38 M32 38 L58 38 M38 38 L45 50 L52 38" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+        <circle cx="45" cy="50" r="4.5" fill="currentColor" />
+        <path d="M26 60 Q45 66 64 60" fill="none" stroke="currentColor" strokeWidth="2.5" strokeDasharray="4 4" />
+        <path d="M18 70 Q45 80 72 70" fill="none" stroke="currentColor" strokeWidth="2.5" strokeDasharray="5 5" />
+        <path d="M12 80 Q45 92 78 80" fill="none" stroke="currentColor" strokeWidth="2.5" strokeDasharray="6 6" opacity="0.7" />
+      </svg>
+      <svg viewBox="0 0 80 80" className="eng-icon icon-compass animate-drift">
+        <circle cx="40" cy="14" r="7" fill="none" stroke="currentColor" strokeWidth="3.5" />
+        <path d="M37 21 L16 74 M43 21 L64 74" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+        <path d="M24 52 Q40 58 56 52" fill="none" stroke="currentColor" strokeWidth="3" strokeDasharray="4 3" />
+        <circle cx="40" cy="14" r="2.5" fill="currentColor" />
+      </svg>
+      <svg viewBox="0 0 100 100" className="eng-icon icon-gear animate-spin-reverse">
+        <path d="M44 6 L56 6 L58 16 C63 18 68 21 72 25 L82 19 L90 27 L83 37 C86 42 88 47 89 52 L99 55 L99 67 L89 70 C88 75 86 80 83 85 L90 95 L82 103 L72 97 C68 101 63 104 58 106 L56 116 L44 116 L42 106 C37 104 32 101 28 97 L18 103 L10 95 L17 85 C14 80 12 75 11 70 L1 67 L1 55 L11 52 C12 47 14 42 17 37 L10 27 L18 19 L28 25 C32 21 37 18 42 16 Z" transform="scale(0.7) translate(22, 10)" fill="none" stroke="currentColor" strokeWidth="3.5" />
+        <circle cx="50" cy="50" r="16" fill="none" stroke="currentColor" strokeWidth="3.5" />
+        <circle cx="50" cy="50" r="6" fill="currentColor" opacity="0.8" />
+      </svg>
+      <div className="eng-scan-beam"></div>
+    </div>
+  );
+}
+
 function PencilMark() {
   return <div className="pencil-scene" aria-hidden="true">
     <div className="pencil">
@@ -45,7 +99,7 @@ function Home() {
   const services = useData('/services', []);
   const projects = useData('/projects', []);
   return <>
-    <section className="hero"><div className="hero-grid"></div><div className="container hero-inner">
+    <section className="hero"><div className="hero-grid"></div><EngineeringBackground variant="hero"/><div className="container hero-inner">
       <div className="hero-copy"><span className="eyebrow"><span className="dot"></span> MEP DESIGN CONSULTANTS</span>
         <h1>{page.title}<em>.</em></h1><p className="hero-sub">{page.subtitle}</p><p className="hero-body">{page.body}</p>
         <div className="hero-actions"><Link className="btn btn-yellow" to="/services">Explore our services <span>↗</span></Link><Link className="btn btn-outline" to="/contact-us">Discuss a project</Link></div>
@@ -57,7 +111,7 @@ function Home() {
     <section className="section"><div className="container"><div className="section-heading"><div><span className="eyebrow dark">WHAT WE DO</span><h2>Engineering the details<br/><em>that make buildings work.</em></h2></div><p>Building services need to work together. We support coordinated design development, technical documentation and project communication from concept to execution.</p></div>
       <div className="service-grid">{(services.length?services:defaultServices).slice(0,5).map((s,i)=><article className="service-card" key={s.id||s.slug}><div className="service-icon">{['⌁','ϟ','✳','◎','↗'][i]}</div><span className="card-number">0{i+1}</span><h3>{s.title}</h3><p>{s.summary}</p><Link to="/services">Learn more <span>↗</span></Link></article>)}</div>
     </div></section>
-    <section className="dark-band"><div className="container band-inner"><div><span className="eyebrow">HOW WE SUPPORT YOU</span><h2>Clear coordination.<br/><em>Confident execution.</em></h2></div><Link className="btn btn-yellow" to="/about-us">Discover GGA <span>↗</span></Link></div></section>
+    <section className="dark-band"><EngineeringBackground variant="band"/><div className="container band-inner"><div><span className="eyebrow">HOW WE SUPPORT YOU</span><h2>Clear coordination.<br/><em>Confident execution.</em></h2></div><Link className="btn btn-yellow" to="/about-us">Discover GGA <span>↗</span></Link></div></section>
     <section className="section projects-preview"><div className="container"><div className="section-heading"><div><span className="eyebrow dark">PROJECT EXPERIENCE</span><h2>Many building types.<br/><em>One coordinated approach.</em></h2></div><Link className="text-link" to="/projects">View project list ↗</Link></div><div className="project-grid">{(projects.length?projects:defaultProjects).slice(0,3).map((p,i)=><article className="project-card" key={p.id||p.title}><div className={`project-art project-art-${i+1}`}><span>{p.location||'PROJECT EXPERIENCE'}</span><div className="building-shape"><i></i><i></i><i></i><i></i></div></div><div className="project-info"><h3>{p.title}</h3><p>{p.location}{p.area_sqft?' · '+p.area_sqft+' sq.ft':''}</p></div></article>)}</div></div></section>
   </>;
 }
@@ -82,7 +136,7 @@ function ContentPage() {
   useEffect(()=>{ document.title = page.seo_title || `${page.title} | GGA MEP Design Consultants`; const meta=document.querySelector('meta[name="description"]'); if(meta && page.seo_description) meta.content=page.seo_description; },[page,slug]);
   const services = useData('/services', []);
   const projects = useData('/projects', []);
-  return <><section className="page-hero"><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> GGA DESIGN CONSULTANTS</span><h1>{page.title}</h1><p>{page.subtitle}</p></div><PencilMark/></div></section>
+  return <><section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> GGA DESIGN CONSULTANTS</span><h1>{page.title}</h1><p>{page.subtitle}</p></div><PencilMark/></div></section>
     <section className="section"><div className="container content-layout"><div className="content-main"><span className="eyebrow dark">GET GREAT ADVICE</span><h2>{page.subtitle}</h2><p className="body-copy">{page.body}</p>
       {slug==='services' && <div className="detail-list">{(services.length?services:defaultServices).map((s,i)=><article key={s.id||s.slug}><span className="detail-num">0{i+1}</span><div><h3>{s.title}</h3><p>{s.details||s.summary}</p></div></article>)}</div>}
       {slug==='projects' && <div className="project-list">{(projects.length?projects:defaultProjects).map((p,i)=><article key={p.id||p.title}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{p.title}</h3><p>{p.location}{p.area_sqft?' · '+p.area_sqft+' sq.ft':''}</p>{p.description&&<p>{p.description}</p>}</div></article>)}</div>}
@@ -97,7 +151,7 @@ function Contact() {
  const [status,setStatus]=useState('');
  const update=e=>setForm({...form,[e.target.name]:e.target.value});
  async function submit(e){e.preventDefault();setStatus('Sending...');try{const r=await fetch(`${API}/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not send');setStatus(d.message);setForm({name:'',email:'',phone:'',message:''});}catch(err){setStatus(err.message+' (Check that the API is running.)');}}
- return <><section className="page-hero"><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> START A CONVERSATION</span><h1>Contact GGA</h1><p>Tell us about your project. We’ll get back to you.</p></div><PencilMark/></div></section><section className="section"><div className="container contact-layout"><div className="contact-details"><span className="eyebrow dark">CONTACT DETAILS</span><h2>Let's discuss<br/><em>your next project.</em></h2><p>Reach out to discuss MEP design scope, coordination, drawings or technical support.</p><div className="contact-detail"><span>EMAIL</span><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a></div><div className="contact-detail"><span>PHONE</span><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a></div><div className="contact-detail"><span>OFFICE</span><p>{settings.office_address||'Madipakkam, Chennai, Tamil Nadu'}</p></div><a className="btn btn-dark" href={WA} target="_blank" rel="noreferrer">Message us on WhatsApp ↗</a></div>
+ return <><section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> START A CONVERSATION</span><h1>Contact GGA</h1><p>Tell us about your project. We’ll get back to you.</p></div><PencilMark/></div></section><section className="section"><div className="container contact-layout"><div className="contact-details"><span className="eyebrow dark">CONTACT DETAILS</span><h2>Let's discuss<br/><em>your next project.</em></h2><p>Reach out to discuss MEP design scope, coordination, drawings or technical support.</p><div className="contact-detail"><span>EMAIL</span><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a></div><div className="contact-detail"><span>PHONE</span><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a></div><div className="contact-detail"><span>OFFICE</span><p>{settings.office_address||'Madipakkam, Chennai, Tamil Nadu'}</p></div><a className="btn btn-dark" href={WA} target="_blank" rel="noreferrer">Message us on WhatsApp ↗</a></div>
  <form className="contact-form" onSubmit={submit}><h3>Send an enquiry</h3><p>Fields marked * are required.</p><label>Full name *<input name="name" value={form.name} onChange={update} required maxLength="120" placeholder="Your name"/></label><label>Email address *<input name="email" type="email" value={form.email} onChange={update} required maxLength="254" placeholder="you@example.com"/></label><label>Phone number<input name="phone" value={form.phone} onChange={update} placeholder="+91" /></label><label>How can we help? *<textarea name="message" value={form.message} onChange={update} required maxLength="5000" rows="5" placeholder="Tell us a little about your project..."/></label><button className="btn btn-yellow" type="submit">Send enquiry ↗</button>{status&&<p className="form-status" role="status">{status}</p>}</form></div></section></>;
 }
 
