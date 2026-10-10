@@ -151,8 +151,40 @@ function Contact() {
  const [status,setStatus]=useState('');
  const update=e=>setForm({...form,[e.target.name]:e.target.value});
  async function submit(e){e.preventDefault();setStatus('Sending...');try{const r=await fetch(`${API}/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not send');setStatus(d.message);setForm({name:'',email:'',phone:'',message:''});}catch(err){setStatus(err.message+' (Check that the API is running.)');}}
- return <><section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> START A CONVERSATION</span><h1>Contact GGA</h1><p>Tell us about your project. We’ll get back to you.</p></div><PencilMark/></div></section><section className="section"><EngineeringBackground variant="light"/><div className="container contact-layout"><div className="contact-details"><span className="eyebrow dark">CONTACT DETAILS</span><h2>Let's discuss<br/><em>your next project.</em></h2><p>Reach out to discuss MEP design scope, coordination, drawings or technical support.</p><div className="contact-detail"><span>EMAIL</span><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a></div><div className="contact-detail"><span>PHONE</span><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a></div><div className="contact-detail"><span>OFFICE</span><p>{settings.office_address||'Madipakkam, Chennai, Tamil Nadu'}</p></div><a className="btn btn-dark" href={WA} target="_blank" rel="noreferrer">Message us on WhatsApp ↗</a></div>
- <form className="contact-form" onSubmit={submit}><h3>Send an enquiry</h3><p>Fields marked * are required.</p><label>Full name *<input name="name" value={form.name} onChange={update} required maxLength="120" placeholder="Your name"/></label><label>Email address *<input name="email" type="email" value={form.email} onChange={update} required maxLength="254" placeholder="you@example.com"/></label><label>Phone number<input name="phone" value={form.phone} onChange={update} placeholder="+91" /></label><label>How can we help? *<textarea name="message" value={form.message} onChange={update} required maxLength="5000" rows="5" placeholder="Tell us a little about your project..."/></label><button className="btn btn-yellow" type="submit">Send enquiry ↗</button>{status&&<p className="form-status" role="status">{status}</p>}</form></div></section></>;
+ const officeAddress = settings.office_address || 'Flat No B, Vallabari Apartment, Vallal Pari Street, Ram Nagar, Madipakkam, Chennai 600091';
+ const mapQuery = encodeURIComponent(officeAddress);
+
+ return <>
+  <section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> START A CONVERSATION</span><h1>Contact GGA</h1><p>Tell us about your project. We’ll get back to you.</p></div><PencilMark/></div></section>
+  <section className="section"><EngineeringBackground variant="light"/><div className="container contact-layout"><div className="contact-details"><span className="eyebrow dark">CONTACT DETAILS</span><h2>Let's discuss<br/><em>your next project.</em></h2><p>Reach out to discuss MEP design scope, coordination, drawings or technical support.</p><div className="contact-detail"><span>EMAIL</span><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a></div><div className="contact-detail"><span>PHONE</span><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a></div><div className="contact-detail"><span>OFFICE</span><p>{officeAddress}</p></div><a className="btn btn-dark" href={WA} target="_blank" rel="noreferrer">Message us on WhatsApp ↗</a></div>
+  <form className="contact-form" onSubmit={submit}><h3>Send an enquiry</h3><p>Fields marked * are required.</p><label>Full name *<input name="name" value={form.name} onChange={update} required maxLength="120" placeholder="Your name"/></label><label>Email address *<input name="email" type="email" value={form.email} onChange={update} required maxLength="254" placeholder="you@example.com"/></label><label>Phone number<input name="phone" value={form.phone} onChange={update} placeholder="+91" /></label><label>How can we help? *<textarea name="message" value={form.message} onChange={update} required maxLength="5000" rows="5" placeholder="Tell us a little about your project..."/></label><button className="btn btn-yellow" type="submit">Send enquiry ↗</button>{status&&<p className="form-status" role="status">{status}</p>}</form></div></section>
+  <section className="map-section">
+    <div className="container">
+      <div className="map-card">
+        <div className="map-header">
+          <div>
+            <span className="eyebrow dark">LOCATION</span>
+            <h3>Our Office in Chennai</h3>
+            <p>{officeAddress}</p>
+          </div>
+          <a className="btn btn-outline-dark" href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noreferrer">Open in Google Maps ↗</a>
+        </div>
+        <div className="map-frame-wrapper">
+          <iframe
+            title="GGA MEP Design Consultants Office Location"
+            src={`https://maps.google.com/maps?q=${mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+            width="100%"
+            height="420"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+ </>;
 }
 
 function Footer({settings}) {
