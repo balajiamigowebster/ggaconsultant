@@ -18,6 +18,20 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
+app.get('/', (_req, res) => {
+  res.json({
+    status: 'online',
+    service: 'GGA MEP Design Consultants API',
+    endpoints: {
+      health: '/api/health',
+      services: '/api/services',
+      projects: '/api/projects',
+      settings: '/api/settings',
+      page: '/api/pages/:slug'
+    }
+  });
+});
+
 app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'GGA MEP API' }));
 
 app.get('/api/pages/:slug', asyncRoute(async (req, res) => {
