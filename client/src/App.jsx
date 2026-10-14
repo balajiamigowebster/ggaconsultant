@@ -5,7 +5,7 @@ const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const WA = 'https://wa.me/918489274385?text=' + encodeURIComponent('Hello GGA, I would like to discuss an MEP design requirement.');
 const FALLBACK = {
   'home': { title:'GGA MEP Design Consultants', subtitle:'Thoughtful MEP design for buildings that work better.', body:'Coordinated plumbing, electrical, firefighting and building-services design support for projects across India and the Gulf.' },
-  'about-us': { title:'About GGA', subtitle:'Practical engineering. Coordinated design.', body:'GGA Design Consultants supports detailed MEP design development and coordination with builders, architects, structural consultants and other project stakeholders.' },
+  'about-us': { title:'About GGA MEP Design Consultants', subtitle:'Designing Smarter Buildings. Engineering Safer Futures.', body:'GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, Firefighting, and Fire Alarm System Design. We focus on delivering innovative, efficient, cost-effective, and safety-oriented engineering design solutions for residential, commercial, industrial, and institutional developments.' },
   'services': { title:'MEP Design Services', subtitle:'Integrated building-services design support.', body:'Explore plumbing, electrical, firefighting, fire alarm and HVAC service areas.' },
   'projects': { title:'Selected Projects', subtitle:'Experience across diverse building types.', body:'The company profile lists residential, commercial, institutional, industrial and public-building projects across multiple locations.' },
   'contact-us': { title:'Contact GGA', subtitle:'Discuss your next MEP design requirement.', body:'Contact us to discuss project scope, design coordination, technical support and documentation requirements.' }
@@ -1679,6 +1679,325 @@ function ServicesPage() {
   );
 }
 
+function AboutPage() {
+  const settings = useData('/settings', {});
+
+  useEffect(() => {
+    document.title = "About Us | GGA MEP Design Consultants";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const corePillars = [
+    {
+      num: '01',
+      title: 'Technical Accuracy',
+      desc: 'Rigorous mathematical modeling for water balance demand, electrical connected load & diversity, fire hydraulic pressure heads, and life-safety coverage.',
+      icon: '📐'
+    },
+    {
+      num: '02',
+      title: 'Coordinated Engineering',
+      desc: 'Multidisciplinary cross-overlay between architectural space, structural concrete elements, and MEP routing to guarantee zero site clashes.',
+      icon: '⚙'
+    },
+    {
+      num: '03',
+      title: 'Energy & Resource Efficiency',
+      desc: 'Optimized system designs focusing on low lifecycle operating costs, sustainable water recycling (STP/RWH), and high power factor efficiency.',
+      icon: '🌱'
+    },
+    {
+      num: '04',
+      title: 'Codes & Safety Compliance',
+      desc: 'Strict adherence to applicable building codes and statutory safety regulations, including NBC 2016, NFPA, IS standards, and local authority fire norms.',
+      icon: '🛡️'
+    }
+  ];
+
+  const sectorsServed = [
+    {
+      title: 'Residential Developments',
+      desc: 'Gated apartment communities, luxury multi-storey towers, and residential townships with tailored plumbing, power distribution, and life safety.',
+      icon: '🏢'
+    },
+    {
+      title: 'Commercial Developments',
+      desc: 'Corporate office headquarters, IT parks, and mixed-use commercial centers requiring high reliability and flexible space services.',
+      icon: '💻'
+    },
+    {
+      title: 'Industrial Developments',
+      desc: 'High-density industrial campuses, manufacturing facilities, and large-scale worker dormitories up to 15,00,000 sq.ft.',
+      icon: '🏭'
+    },
+    {
+      title: 'Institutional Developments',
+      desc: 'Civic safety stations, educational campuses, defence installations, and large-capacity civic auditoriums.',
+      icon: '🏛️'
+    }
+  ];
+
+  const supportScope = [
+    'Coordination with design stakeholders for detailed MEP design development',
+    'Coordination with the builder, architect and structural consultant for concept closure',
+    'Site visits and meetings to support execution as per design',
+    'Technical clarifications and RFI clearance throughout the build cycle',
+    'Technical support for finalisation of specifications and equipment schedules',
+    'Technical support for tender coordination and contractor evaluation',
+    'Issuance of Good-For-Construction (GFC) drawings in soft and hard copy',
+    'Review and technical approval of vendor shop drawings and GA drawings'
+  ];
+
+  return (
+    <div className="about-page-wrapper">
+      {/* Page Hero */}
+      <section className="page-hero about-hero">
+        <EngineeringBackground variant="page" />
+        <div className="container page-hero-inner">
+          <div>
+            <span className="eyebrow">
+              <span className="dot"></span> COMPANY PROFILE &amp; ENGINEERING VISION
+            </span>
+            <h1>Designing Smarter Buildings. Engineering Safer Futures.</h1>
+            <p>
+              GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, Firefighting, and Fire Alarm System Design.
+            </p>
+          </div>
+          <PencilMark />
+        </div>
+      </section>
+
+      {/* Main Section */}
+      <section className="section about-main-section">
+        <EngineeringBackground variant="light" />
+        <div className="container">
+
+          {/* Tagline Showcase Ribbon */}
+          <div className="about-tagline-ribbon">
+            <div className="tagline-kicker">OUR OFFICIAL TAGLINE</div>
+            <h2 className="tagline-quote">“Designing Smarter Buildings. Engineering Safer Futures.”</h2>
+            <p className="tagline-sub">
+              A commitment embedded in every design calculation, schematic layout, and spatial coordination drawing we produce.
+            </p>
+          </div>
+
+          {/* Executive Company Profile Overview */}
+          <div className="about-intro-grid">
+            <div className="about-intro-content">
+              <span className="eyebrow dark">COMPANY PROFILE</span>
+              <h2 className="about-intro-heading">
+                Specialized MEP Engineering Consultancy for Built Environments
+              </h2>
+
+              <div className="profile-paragraphs">
+                <p className="profile-lead-p">
+                  <strong>GGA MEP Design Consultants</strong> provides specialized engineering consultancy services in <strong>Plumbing, Electrical, Firefighting, and Fire Alarm System Design</strong>.
+                </p>
+                <p>
+                  We focus on delivering innovative, efficient, cost-effective, and safety-oriented engineering design solutions for residential, commercial, industrial, and institutional developments.
+                </p>
+                <p>
+                  Our design approach emphasizes technical accuracy, coordinated engineering, energy efficiency, and compliance with applicable building codes and safety requirements.
+                </p>
+                <p>
+                  From initial design concepts to detailed engineering drawings and technical documentation, GGA MEP Design Consultants aims to support successful project planning and execution.
+                </p>
+              </div>
+
+              <div className="about-cta-row">
+                <Link className="btn btn-yellow" to="/services">
+                  Explore Our Services ↗
+                </Link>
+                <Link className="btn btn-outline-dark" to="/projects">
+                  View Selected Projects ↗
+                </Link>
+              </div>
+            </div>
+
+            {/* Profile Highlights Card */}
+            <aside className="about-identity-card">
+              <div className="identity-header">
+                <span className="identity-badge">GGA MEP DESIGN CONSULTANTS</span>
+                <h3>Engineering Excellence</h3>
+              </div>
+              <div className="identity-stats-list">
+                <div className="identity-stat-row">
+                  <span className="stat-label">Specialized Disciplines</span>
+                  <span className="stat-val">PHE · Electrical · Firefighting · Fire Alarm</span>
+                </div>
+                <div className="identity-stat-row">
+                  <span className="stat-label">Project Typologies</span>
+                  <span className="stat-val">Residential · Commercial · Industrial · Institutional</span>
+                </div>
+                <div className="identity-stat-row">
+                  <span className="stat-label">Design Standards</span>
+                  <span className="stat-val">NBC 2016 · NFPA · IS Codes · CPHEEO</span>
+                </div>
+                <div className="identity-stat-row">
+                  <span className="stat-label">Head Office</span>
+                  <span className="stat-val">Madipakkam, Chennai, Tamil Nadu</span>
+                </div>
+                <div className="identity-stat-row">
+                  <span className="stat-label">Director</span>
+                  <span className="stat-val">{settings.director_name || 'M. Arumugam'}</span>
+                </div>
+              </div>
+
+              <div className="identity-contact-box">
+                <p><strong>Direct Consultation:</strong></p>
+                <a href="mailto:ggamepconsultant@gmail.com" className="identity-link">✉ ggamepconsultant@gmail.com</a>
+                <a href="tel:+918489274385" className="identity-link">☎ +91 8489274385</a>
+                <a href={WA} target="_blank" rel="noreferrer" className="btn btn-yellow identity-btn">WhatsApp Chat ↗</a>
+              </div>
+            </aside>
+          </div>
+
+          {/* Vision & Mission Cards */}
+          <section className="about-vision-mission-section">
+            <div className="section-header-centered">
+              <span className="services-kicker">OUR GUIDING PRINCIPLES</span>
+              <h2>Vision &amp; Mission</h2>
+              <p>
+                The enduring standards that shape our client partnerships, technical deliverables, and future engineering milestones.
+              </p>
+            </div>
+
+            <div className="vision-mission-grid">
+              {/* Vision Card */}
+              <div className="vm-card vision-card">
+                <div className="vm-card-top">
+                  <span className="vm-icon" aria-hidden="true">🎯</span>
+                  <span className="vm-badge">OUR VISION</span>
+                </div>
+                <h3 className="vm-title">Recognized for Technical Excellence &amp; Safety</h3>
+                <blockquote className="vm-quote">
+                  “To become a trusted MEP engineering design consultancy, recognized for technical excellence, innovative solutions, and a strong commitment to safety and quality.”
+                </blockquote>
+                <div className="vm-highlights">
+                  <div className="vm-pill">✦ Trusted Consultancy</div>
+                  <div className="vm-pill">✦ Technical Excellence</div>
+                  <div className="vm-pill">✦ Innovative Solutions</div>
+                  <div className="vm-pill">✦ Safety &amp; Quality Commitment</div>
+                </div>
+              </div>
+
+              {/* Mission Card */}
+              <div className="vm-card mission-card">
+                <div className="vm-card-top">
+                  <span className="vm-icon" aria-hidden="true">🚀</span>
+                  <span className="vm-badge">OUR MISSION</span>
+                </div>
+                <h3 className="vm-title">Reliable, Sustainable &amp; Economical Solutions</h3>
+                <blockquote className="vm-quote">
+                  “To provide reliable, sustainable, and economical engineering design solutions that meet client expectations, enhance building performance, and support long-term operational efficiency.”
+                </blockquote>
+                <div className="vm-highlights">
+                  <div className="vm-pill">✦ Reliable Execution</div>
+                  <div className="vm-pill">✦ Sustainable Engineering</div>
+                  <div className="vm-pill">✦ Client-Focused Solutions</div>
+                  <div className="vm-pill">✦ Long-Term Operational Efficiency</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 4 Core Design Pillars */}
+          <section className="about-pillars-section">
+            <div className="section-header-centered">
+              <span className="services-kicker">OUR DESIGN APPROACH</span>
+              <h2>Core Pillars of Our Engineering Solutions</h2>
+              <p>
+                Every project at GGA is guided by four fundamental engineering criteria to ensure flawless execution and occupant safety.
+              </p>
+            </div>
+
+            <div className="pillars-grid">
+              {corePillars.map((p) => (
+                <div className="pillar-card" key={p.num}>
+                  <div className="pillar-top">
+                    <span className="pillar-icon" aria-hidden="true">{p.icon}</span>
+                    <span className="pillar-num">{p.num}</span>
+                  </div>
+                  <h4 className="pillar-title">{p.title}</h4>
+                  <p className="pillar-desc">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Sectors Served */}
+          <section className="about-sectors-section">
+            <div className="section-header-centered">
+              <span className="services-kicker">DEVELOPMENT TYPOLOGIES</span>
+              <h2>Developments We Design For</h2>
+              <p>
+                Engineering design solutions customized to the unique spatial, functional, and statutory demands of diverse building typologies.
+              </p>
+            </div>
+
+            <div className="sectors-grid">
+              {sectorsServed.map((s, idx) => (
+                <div className="sector-item-card" key={idx}>
+                  <span className="sector-emoji" aria-hidden="true">{s.icon}</span>
+                  <h4>{s.title}</h4>
+                  <p>{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Project Planning & Execution Scope */}
+          <section className="about-scope-section">
+            <div className="section-header-centered">
+              <span className="services-kicker">END-TO-END SUPPORT</span>
+              <h2>From Concept to Construction Documentation</h2>
+              <p>
+                GGA MEP Design Consultants actively supports project planning and execution through structured technical milestones.
+              </p>
+            </div>
+
+            <div className="scope-list-grid">
+              {supportScope.map((item, idx) => (
+                <div className="scope-list-item" key={idx}>
+                  <span className="scope-num">{String(idx + 1).padStart(2, '0')}</span>
+                  <div className="scope-text">
+                    <p>{item}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Bottom Consultation Banner */}
+          <div className="services-cta-banner">
+            <div className="cta-left">
+              <span className="services-kicker kicker-light">PARTNER WITH GGA</span>
+              <h3>Ready to plan and engineer your next development?</h3>
+              <p>
+                Reach out to GGA MEP Design Consultants to discuss project scope, design coordination, technical calculations, and documentation requirements.
+              </p>
+            </div>
+            <div className="cta-actions">
+              <Link className="btn btn-yellow" to="/contact-us">
+                Contact Us ↗
+              </Link>
+              <a
+                className="btn btn-outline"
+                href={WA}
+                target="_blank"
+                rel="noreferrer"
+              >
+                WhatsApp Consultation ↗
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function ContentPage() {
   const { slug } = useParams();
   if (slug === 'projects') {
@@ -1686,6 +2005,9 @@ function ContentPage() {
   }
   if (slug === 'services') {
     return <ServicesPage />;
+  }
+  if (slug === 'about-us') {
+    return <AboutPage />;
   }
   const fallback = FALLBACK[slug] || FALLBACK['about-us'];
   const page = useData(`/pages/${slug}`, fallback);
@@ -1715,27 +2037,6 @@ function ContentPage() {
             <span className="eyebrow dark">GET GREAT ADVICE</span>
             <h2>{page.subtitle}</h2>
             <p className="body-copy">{page.body}</p>
-            {slug === 'about-us' && (
-              <div className="detail-list">
-                {[
-                  'MEP design development coordination',
-                  'Coordination with builders, architects and structural consultants',
-                  'Site visits and meetings to support execution as per design',
-                  'Technical clarifications and RFI clearance',
-                  'Specification finalisation and tender coordination',
-                  'GFC drawing issuance in soft and hard copy',
-                  'Review of vendor shop and GA drawings'
-                ].map((x, i) => (
-                  <article key={x}>
-                    <span className="detail-num">0{i+1}</span>
-                    <div>
-                      <h3>{x}</h3>
-                      <p>Project-specific support agreed according to scope, programme and applicable requirements.</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            )}
           </div>
           <aside className="contact-card">
             <span className="eyebrow">LET'S TALK</span>
@@ -1895,5 +2196,5 @@ function FloatingActions({ settings }) {
 
 export default function App() {
  const settings=useData('/settings',{});
- return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<ContentPage/>}/><Route path="/services" element={<ServicesPage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
+ return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<AboutPage/>}/><Route path="/services" element={<ServicesPage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
 }
