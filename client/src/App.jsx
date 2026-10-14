@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom';
+import { Link, NavLink, Route, Routes, useParams, useSearchParams } from 'react-router-dom';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 const WA = 'https://wa.me/918489274385?text=' + encodeURIComponent('Hello GGA, I would like to discuss an MEP design requirement.');
@@ -425,7 +425,19 @@ function Home() {
     </div><div className="hero-bottom-line"></div></section>
     <section className="trust-strip"><div className="container trust-inner"><span>DESIGN SERVICES</span><b>Plumbing</b><b>Electrical</b><b>Fire Fighting</b><b>Fire Alarm</b><b>HVAC</b></div></section>
     <section className="section"><EngineeringBackground variant="light"/><div className="container"><div className="section-heading"><div><span className="eyebrow dark">WHAT WE DO</span><h2>Engineering the details<br/><em>that make buildings work.</em></h2></div><p>Building services need to work together. We support coordinated design development, technical documentation and project communication from concept to execution.</p></div>
-      <div className="service-grid">{(services.length?services:defaultServices).slice(0,5).map((s,i)=><article className="service-card" key={s.id||s.slug}><div className="service-icon">{['⌁','ϟ','✳','◎','↗'][i]}</div><span className="card-number">0{i+1}</span><h3>{s.title}</h3><p>{s.summary}</p><Link to="/services">Learn more <span>↗</span></Link></article>)}</div>
+      <div className="service-grid">{(services.length?services:defaultServices).slice(0,5).map((s,i)=>{
+        const disciplineKeys = ['plumbing','electrical','fire-fighting','fire-alarm','hvac'];
+        const targetKey = s.slug ? s.slug.replace('-design', '').replace('-systems', '') : disciplineKeys[i];
+        return (
+          <article className="service-card" key={s.id||s.slug}>
+            <div className="service-icon">{['💧','⚡','🧯','🔔','❄️'][i]}</div>
+            <span className="card-number">0{i+1}</span>
+            <h3>{s.title}</h3>
+            <p>{s.summary}</p>
+            <Link to={`/services?discipline=${targetKey}`}>Explore discipline <span>↗</span></Link>
+          </article>
+        );
+      })}</div>
     </div></section>
     <section className="dark-band"><EngineeringBackground variant="band"/><div className="container band-inner"><div><span className="eyebrow">HOW WE SUPPORT YOU</span><h2>Clear coordination.<br/><em>Confident execution.</em></h2></div><Link className="btn btn-yellow" to="/about-us">Discover GGA <span>↗</span></Link></div></section>
     <section className="section projects-preview"><EngineeringBackground variant="light"/><div className="container"><div className="section-heading"><div><span className="eyebrow dark">PROJECT EXPERIENCE</span><h2>Many building types.<br/><em>One coordinated approach.</em></h2></div><Link className="text-link" to="/projects">View project list ↗</Link></div><div className="project-grid">{(projects.length?projects:defaultProjects).slice(0,3).map((p,i)=><article className="project-card" key={p.id||p.title}><div className={`project-art project-art-${i+1}`}><span>{p.location||'PROJECT EXPERIENCE'}</span><div className="building-shape"><i></i><i></i><i></i><i></i></div></div><div className="project-info"><h3>{p.title}</h3><p>{p.location}{p.area_sqft?' · '+p.area_sqft+' sq.ft':''}</p></div></article>)}</div></div></section>
@@ -942,59 +954,802 @@ function ProjectsPage() {
   );
 }
 
+const ggaServices = [
+  {
+    id: 'plumbing-design',
+    disciplineKey: 'plumbing',
+    disciplineNumber: '01',
+    badge: 'PUBLIC HEALTH ENGINEERING (PHE)',
+    title: 'Plumbing & Public Health Engineering',
+    shortTitle: 'Plumbing (PHE)',
+    tagline: 'Water balance, hydro-pneumatic boosting, drainage collection & treatment plant engineering.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+        <path d="M12 11v6"/>
+        <path d="M9 14h6"/>
+      </svg>
+    ),
+    statHighlight: { value: '40%+', label: 'Water Recycled via STP/RWH Design' },
+    summary: 'Comprehensive PHE design from raw water intake, treatment and hydro-pneumatic pumping to internal sanitary fixtures, dual-stack drainage, and sustainable stormwater management.',
+    description: "GGA delivers comprehensive Public Health Engineering (PHE) consulting tailored to high-occupancy commercial towers, manufacturing campuses, and gated residential communities. Every schematic complies with CPHEEO manuals, NBC 2016 Part 9, and Uniform Plumbing Code (UPC-I) guidelines to ensure water conservation, sanitary hygiene, and optimal lifecycle durability.",
+    coreScope: [
+      'Internal & external cold and hot water distribution networks',
+      'Hydro-pneumatic booster pumping systems & gravity overhead tank sizing',
+      'Soil, waste, and vent drainage collection networks with dual-stack venting',
+      'Stormwater runoff management, external storm drainage & rainwater harvesting (RWH)',
+      'Sewage Treatment Plant (STP) & Effluent Treatment Plant (ETP) space and hydraulic coordination',
+      'Water Treatment Plant (WTP) filtration, softening & RO system planning',
+      'Basement sub-soil drainage and automated dewatering sump pump systems',
+      'Solar water heating integration & centralized hot water return circulation'
+    ],
+    standards: [
+      { code: 'NBC 2016 Part 9', name: 'Plumbing Services & Sanitation Norms' },
+      { code: 'CPHEEO Manual', name: 'Water Supply & Sewerage Design Guidelines' },
+      { code: 'IS 1172 & IS 2065', name: 'Basic Requirements for Water Supply & Drainage' },
+      { code: 'UPC-I', name: 'Uniform Plumbing Code of India' }
+    ],
+    deliverables: [
+      'Water Supply Schematics & Pipe Sizing Hydraulic Calculations',
+      'Soil & Waste Riser Diagrams with Designated Invert Levels',
+      'External Utility Infrastructure & Inspection Chamber Layouts',
+      'Pumping Station & Plant Room Detailed GA Layouts',
+      'Comprehensive Bill of Quantities (BOQ) & Valve Schedules'
+    ]
+  },
+  {
+    id: 'electrical-design',
+    disciplineKey: 'electrical',
+    disciplineNumber: '02',
+    badge: 'ELECTRICAL & LOW VOLTAGE (LV / ELV)',
+    title: 'Electrical & Power Distribution Systems',
+    shortTitle: 'Electrical & ELV',
+    tagline: 'High-voltage substations, low-voltage distribution, backup generation, and integrated building automation.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+    ),
+    statHighlight: { value: '0.98+', label: 'Target Power Factor Optimization' },
+    summary: 'End-to-end power engineering covering HT/LT substations, transformer sizing, DG synchronization, busways, illumination design, and integrated ELV/BMS systems.',
+    description: "From high-capacity transformer substations to precision lighting and ELV safety networks, GGA designs robust power infrastructures that maximize energy efficiency, safeguard against harmonic distortion, and guarantee uninterrupted continuity.",
+    coreScope: [
+      'HT Substation, HT/LT Transformer sizing & switchgear configuration',
+      'Electrical connected load, maximum demand & diversity factor calculations',
+      'Diesel Generator (DG) synchronization & auto-mains failure (AMF) control logic',
+      'Uninterruptible Power Supply (UPS) centralized & localized systems',
+      'Main LT Panel, Sub-Distribution Boards (SDB), and intelligent metering',
+      'Cable tray routing, bus-duct systems & vertical electrical riser detailing',
+      'Lighting simulation, lux-level calculations & architectural luminaire layout',
+      'Chemical earthing, lightning protection grids (as per IS/IEC 62305)',
+      'Low Voltage (ELV): Structured cabling, CCTV, Access Control & Building Automation (BMS)'
+    ],
+    standards: [
+      { code: 'IS 732 & IS 3043', name: 'Wiring Installations & Chemical Earthing' },
+      { code: 'NBC 2016 Part 8 Sec 2', name: 'Electrical & Allied Installations' },
+      { code: 'CEA Regulations 2010', name: 'Central Electricity Authority Safety Norms' },
+      { code: 'IS/IEC 62305', name: 'Protection Against Lightning & Surges' }
+    ],
+    deliverables: [
+      'Comprehensive Single Line Diagrams (HT/LT SLD)',
+      'Power, Small Power & Raw Power Floor Distribution Layouts',
+      'Indoor & Outdoor Lighting Layouts with Circuiting Schedules',
+      'Earthing & Lightning Protection Grid Shop Layouts',
+      'Substation & Electrical Room Layouts with Statutory Clearances'
+    ]
+  },
+  {
+    id: 'fire-fighting-design',
+    disciplineKey: 'fire-fighting',
+    disciplineNumber: '03',
+    badge: 'FIRE FIGHTING & HYDRAULIC SUPPRESSION',
+    title: 'Fire Fighting & Hydraulic Suppression',
+    shortTitle: 'Fire Fighting',
+    tagline: 'Fully compliant hydrant, wet-riser, automated sprinkler, and high-pressure fire pump room engineering.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+      </svg>
+    ),
+    statHighlight: { value: '100%', label: 'First-Pass Fire NOC Approval Rate' },
+    summary: 'Life-safety hydraulic suppression engineering featuring internal wet-risers, yard hydrants, automated sprinkler networks, and dedicated high-pressure fire pump stations.',
+    description: "GGA delivers life-critical fire safety suppression engineering compliant with NBC 2016 Part 4, NFPA standards, and state Fire and Rescue Services department requirements. We protect high-rise occupants and high-value capital assets.",
+    coreScope: [
+      'Hydraulic node calculation & water demand sizing for fire reserves',
+      'Internal wet-riser system with landing valves & first-aid hose reels',
+      'External yard hydrant ring mains with landing valves and breeching inlets',
+      'Automated wet-pipe sprinkler grid layout for basements and occupied floors',
+      'Dedicated fire pump room layout (Main Electric, Standby Diesel, Jockey & Booster pumps)',
+      'Pre-action sprinkler & clean agent gaseous suppression for server rooms & substations',
+      'Deluge water spray system for transformers and flammable fuel storage',
+      'Portable & trolley fire extinguisher allocation and statutory escape signage'
+    ],
+    standards: [
+      { code: 'NBC 2016 Part 4', name: 'Fire & Life Safety Standards' },
+      { code: 'IS 3844 & IS 15105', name: 'Hydrant & Sprinkler Design Codes' },
+      { code: 'NFPA 13, 14, 20', name: 'National Fire Protection Association Standards' },
+      { code: 'State Fire Authority', name: 'Fire and Rescue Services Department NOC Rules' }
+    ],
+    deliverables: [
+      'Fire Hydraulic Schematic & System P&ID Flow Diagrams',
+      'Fire Pump Room GA with Header, Suction & Delivery Sizing',
+      'Floor-wise Hydrant & Sprinkler Distribution GFC Plans',
+      'Fire Water Underground & Overhead Storage Tank Details',
+      'Tender Specification & Fire Department NOC Compliance Packs'
+    ]
+  },
+  {
+    id: 'fire-alarm-systems',
+    disciplineKey: 'fire-alarm',
+    disciplineNumber: '04',
+    badge: 'FIRE ALARM & DETECTION SYSTEMS',
+    title: 'Fire Alarm & Emergency Detection Systems',
+    shortTitle: 'Fire Alarm & Detection',
+    tagline: 'Microprocessor addressable detection, smoke management, and integrated emergency evacuation.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        <line x1="12" y1="2" x2="12" y2="4"/>
+      </svg>
+    ),
+    statHighlight: { value: '<30s', label: 'Egress Evacuation Warning Response' },
+    summary: 'Intelligent analogue addressable fire detection, optical smoke and heat sensor networks, HVAC damper trips, and public address evacuation integration.',
+    description: "Early warning is the cornerstone of life safety. GGA designs intelligent analogue addressable fire alarm systems interfacing seamlessly with HVAC fire dampers, elevator grounding, access control door unlocking, and public address evacuation systems.",
+    coreScope: [
+      'Analogue addressable optical smoke, thermal heat & multi-sensor detector layouts',
+      'Main Fire Alarm Control Panel (FACP) & Repeater Panel network architecture',
+      'Manual Call Points (MCP) and strobe sounders along statutory exit egress paths',
+      'Beam detectors for high-ceiling warehouses, atriums & industrial bays',
+      'Duct smoke detectors and interface modules for HVAC fire damper trip',
+      'Voice Evacuation & Public Address (PA/VA) integration for zoned phased evacuation',
+      'Lift grounding control module & magnetic door release integration',
+      'Integration with Building Management System (BMS) and central fire command center'
+    ],
+    standards: [
+      { code: 'IS 2189:2008', name: 'Selection, Installation & Maintenance of Fire Alarms' },
+      { code: 'NBC 2016 Part 4', name: 'Life Safety Egress & Emergency Signaling' },
+      { code: 'NFPA 72', name: 'National Fire Alarm and Signaling Code' },
+      { code: 'EN 54 Standards', name: 'Fire Detection & Alarm System Components' }
+    ],
+    deliverables: [
+      'Fire Alarm System Loop Schematics & Panel Riser Diagrams',
+      'Floor-wise Addressable Device Mapping & Cable Route Plans',
+      'Fire Interlocking Cause & Effect (Matrix) Logic Sheets',
+      'Fire Command Center Ergonomic & Equipment Layouts',
+      'Detailed Device Schedule & Cable Sizing Calculations'
+    ]
+  },
+  {
+    id: 'hvac-design',
+    disciplineKey: 'hvac',
+    disciplineNumber: '05',
+    badge: 'HVAC & MECHANICAL VENTILATION',
+    title: 'HVAC & Mechanical Ventilation Coordination',
+    shortTitle: 'HVAC & Ventilation',
+    tagline: 'Cooling load calculations, duct spatial routing, basement smoke exhaust, and energy recovery systems.',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9"/>
+        <path d="M22 12a4.5 4.5 0 0 0-9 0 4.5 4.5 0 0 1-9 0"/>
+      </svg>
+    ),
+    statHighlight: { value: '25%+', label: 'Energy Reduction vs Standard Baselines' },
+    summary: 'Thermal comfort and ventilation engineering, including cooling load simulations, VRF and chiller routing, basement smoke extraction, and staircase pressurization.',
+    description: "GGA coordinates indoor environmental air quality and thermal comfort with minimal energy consumption. We harmonize duct paths with structural beams and false ceiling heights, preventing site clashes and costly field modifications.",
+    coreScope: [
+      'Building thermal envelope heat-load analysis & tonnage calculation',
+      'Central chilled water plant vs VRF/VRV system selection & feasibility',
+      'Air Handling Units (AHU) & Fan Coil Units (FCU) zoning and piping layout',
+      'Precision Air Conditioning (PAC) for server rooms and data centers',
+      'Basement car park mechanical ventilation & jet fan induction systems',
+      'Kitchen exhaust, scrubber systems & fresh air makeup coordination',
+      'Toilet exhaust ventilation & shaft riser duct sizing',
+      'Staircase & lift well pressurization for smoke-free emergency egress'
+    ],
+    standards: [
+      { code: 'ASHRAE 90.1 & 62.1', name: 'Energy Standard & Indoor Air Quality' },
+      { code: 'IS 659', name: 'Safety Code for Air Conditioning' },
+      { code: 'NBC 2016 Part 8 Sec 3', name: 'Air Conditioning, Heating & Mechanical Ventilation' },
+      { code: 'ECBC Guidelines', name: 'Energy Conservation Building Code Compliance' }
+    ],
+    deliverables: [
+      'HVAC Chilled Water & Refrigerant Piping Schematics',
+      'Ductwork Spatial Routing & False Ceiling Level Coordination',
+      'Basement Jet Fan & Exhaust Ductwork GFC Layouts',
+      'Plant Room & AHU Room Cross-Sectional Elevation Drawings',
+      'Equipment Schedules & Acoustic Attenuation Specifications'
+    ]
+  }
+];
+
+const coordinationStages = [
+  {
+    step: '01',
+    title: 'Concept & RFI Closure',
+    subtitle: 'Architectural Massing & Utility Alignment',
+    desc: 'Reviewing architectural layouts, site contours, municipal water & electrical supply points, and closing critical RFIs before detailing begins.',
+    badge: 'Preliminary Phase'
+  },
+  {
+    step: '02',
+    title: 'Load Calculations & Sizing',
+    subtitle: 'Mathematical Demand Modeling',
+    desc: 'Water balance demand, maximum electrical load & diversity factors, fire water reserve sizing, and thermal heat loads.',
+    badge: 'Engineering Sizing'
+  },
+  {
+    step: '03',
+    title: 'System Architecture & SLDs',
+    subtitle: 'Schematics & Flow Logic',
+    desc: 'Developing comprehensive Single Line Diagrams (SLDs), hydraulic flow diagrams, vertical zoning, and pump head calculations.',
+    badge: 'Schematics'
+  },
+  {
+    step: '04',
+    title: 'Shaft & Space Allocation',
+    subtitle: 'Plant Room & Riser Footprints',
+    desc: 'Sizing dedicated MEP shafts, electrical substation rooms, transformer yards, STP/WTP locations, and underground water sumps.',
+    badge: 'Spatial Planning'
+  },
+  {
+    step: '05',
+    title: 'Clash-Free Coordination',
+    subtitle: 'Cross-Discipline 3D/2D Overlay',
+    desc: 'Harmonizing duct routes, pipe sleeves, and cable trays against structural beam depths and architectural false ceiling levels.',
+    badge: 'Clash Elimination'
+  },
+  {
+    step: '06',
+    title: 'Tender Docs & Detailed BOQ',
+    subtitle: 'Commercial & Technical Specifications',
+    desc: 'Preparing comprehensive technical specifications, valve schedules, detailed Bill of Quantities (BOQ), and vendor eligibility criteria.',
+    badge: 'Procurement Ready'
+  },
+  {
+    step: '07',
+    title: 'Good-For-Construction (GFC)',
+    subtitle: 'Drawing Release for Site Execution',
+    desc: 'Issuing high-precision GFC drawings (soft & hard copies) with precise invert levels, sleeve drop zones, and circuit tags.',
+    badge: 'Execution Release'
+  },
+  {
+    step: '08',
+    title: 'Vendor GA Review & Site Support',
+    subtitle: 'Execution Integrity & Sign-Off',
+    desc: 'Reviewing vendor shop drawings, inspecting critical installation milestones, and providing rapid engineering support on site.',
+    badge: 'Handover & Quality'
+  }
+];
+
+const coordinationMatrix = [
+  {
+    aspect: 'Spatial Coordination & Headroom',
+    uncoordinated: 'Clashes between plumbing drops, electrical trays, and HVAC ducts. Punctured RCC beams, dropped ceilings, and risky coring.',
+    ggaMethod: 'Dedicated 3D/2D corridor routing with sleeves pre-cast in concrete. Full architectural ceiling height preserved with zero structural coring.'
+  },
+  {
+    aspect: 'Procurement & Cost Control',
+    uncoordinated: '15% to 25% budget overruns from on-site dismantling, cut-and-throw pipe waste, and vague contractor lump-sums.',
+    ggaMethod: 'Exact Bill of Quantities (BOQ) with itemized schedules and zero scrap margins, delivering predictable contractor bids.'
+  },
+  {
+    aspect: 'Statutory Authority Approvals',
+    uncoordinated: 'Frequent rejections and delays in Fire NOC, CEIG electrical inspectorate, and pollution board clearances.',
+    ggaMethod: '100% adherence to NBC 2016, NFPA, IS 2189, and CPHEEO standards ensuring rapid first-pass statutory clearances.'
+  },
+  {
+    aspect: 'Construction Handover Timeline',
+    uncoordinated: 'Costly contractor disputes, idle labor, and months lost on site while resolving design ambiguities.',
+    ggaMethod: 'Smooth, conflict-free site installation backed by clear GFC drawings and prompt technical RFI resolution.'
+  }
+];
+
+const buildingTypologies = [
+  {
+    icon: '🏢',
+    title: 'High-Rise Residential & Townships',
+    desc: 'Optimized PHE booster systems, acoustic drain pipes, and energy-efficient lighting across gated residential towers.'
+  },
+  {
+    icon: '🏭',
+    title: 'Industrial Campuses & Dormitories',
+    desc: 'Heavy-duty HT substations, high-capacity fire hydrants, and mega dormitory MEP infrastructure up to 15,00,000 sq.ft.'
+  },
+  {
+    icon: '💻',
+    title: 'IT Parks & Commercial HQs',
+    desc: 'N+1 redundant UPS power, high-efficiency chiller plants, intelligent BMS automation, and addressable life-safety.'
+  },
+  {
+    icon: '🏥',
+    title: 'Hospitals & Healthcare Facilities',
+    desc: 'Critical medical power separation, isolated grounding, precision ventilation, and ultra-hygienic plumbing networks.'
+  },
+  {
+    icon: '🏛️',
+    title: 'Civic, Institutional & Auditoriums',
+    desc: 'Acoustically quiet ventilation, high-occupancy egress fire alarms, and continuous emergency back-up generator sets.'
+  },
+  {
+    icon: '🛍️',
+    title: 'Commercial Malls & Retail Hubs',
+    desc: 'High-density sprinkler grids, smoke spill extraction, tenant utility sub-metering, and dynamic architectural illumination.'
+  }
+];
+
+function ServicesPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramDiscipline = searchParams.get('discipline');
+
+  const initialCategory = useMemo(() => {
+    if (!paramDiscipline) return 'All';
+    const clean = paramDiscipline.toLowerCase().replace('-design', '').replace('-systems', '');
+    const found = ['plumbing', 'electrical', 'fire-fighting', 'fire-alarm', 'hvac'].find((k) => k === clean);
+    return found || 'All';
+  }, [paramDiscipline]);
+
+  const [activeDiscipline, setActiveDiscipline] = useState(initialCategory);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    document.title = "MEP Design & Coordination Services | GGA MEP Design Consultants";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
+    if (paramDiscipline) {
+      const clean = paramDiscipline.toLowerCase().replace('-design', '').replace('-systems', '');
+      if (['plumbing', 'electrical', 'fire-fighting', 'fire-alarm', 'hvac'].includes(clean)) {
+        setActiveDiscipline(clean);
+      }
+    }
+  }, [paramDiscipline]);
+
+  const disciplineTabs = [
+    { id: 'All', label: 'All Disciplines', count: 5, icon: '❖' },
+    { id: 'plumbing', label: '01 Plumbing (PHE)', count: 1, icon: '💧' },
+    { id: 'electrical', label: '02 Electrical & ELV', count: 1, icon: '⚡' },
+    { id: 'fire-fighting', label: '03 Fire Fighting', count: 1, icon: '🧯' },
+    { id: 'fire-alarm', label: '04 Fire Alarm', count: 1, icon: '🔔' },
+    { id: 'hvac', label: '05 HVAC & Ventilation', count: 1, icon: '❄️' }
+  ];
+
+  const filteredServices = useMemo(() => {
+    return ggaServices.filter((service) => {
+      const matchesCategory = activeDiscipline === 'All' || service.disciplineKey === activeDiscipline;
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch = !q || (
+        service.title.toLowerCase().includes(q) ||
+        service.tagline.toLowerCase().includes(q) ||
+        service.description.toLowerCase().includes(q) ||
+        service.coreScope.some((s) => s.toLowerCase().includes(q)) ||
+        service.standards.some((st) => st.code.toLowerCase().includes(q) || st.name.toLowerCase().includes(q)) ||
+        service.deliverables.some((d) => d.toLowerCase().includes(q))
+      );
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeDiscipline, searchQuery]);
+
+  return (
+    <div className="services-page-wrapper">
+      {/* Page Hero */}
+      <section className="page-hero services-hero">
+        <EngineeringBackground variant="page" />
+        <div className="container page-hero-inner">
+          <div>
+            <span className="eyebrow">
+              <span className="dot"></span> INTEGRATED BUILDING SERVICES CONSULTANCY
+            </span>
+            <h1>Engineering Services &amp; Clash-Free Coordination</h1>
+            <p>
+              Delivering code-compliant, clash-free, and energy-optimized Plumbing, Electrical, Fire Protection, and HVAC systems for high-performance buildings.
+            </p>
+          </div>
+          <PencilMark />
+        </div>
+      </section>
+
+      {/* Main Services Section */}
+      <section className="section services-main-section">
+        <EngineeringBackground variant="light" />
+        <div className="container">
+
+          {/* Executive Services Stats Ribbon */}
+          <div className="projects-stats-ribbon services-stats-ribbon">
+            <div className="project-stat-box">
+              <span className="stat-number">5</span>
+              <span className="stat-unit">CORE DISCIPLINES</span>
+              <span className="stat-caption">PHE, Electrical, Fire Fighting, Alarm &amp; HVAC</span>
+            </div>
+            <div className="project-stat-sep" aria-hidden="true"></div>
+            <div className="project-stat-box">
+              <span className="stat-number">100%</span>
+              <span className="stat-unit">CODE COMPLIANT</span>
+              <span className="stat-caption">NBC 2016, NFPA, IS &amp; CPHEEO Standards</span>
+            </div>
+            <div className="project-stat-sep" aria-hidden="true"></div>
+            <div className="project-stat-box">
+              <span className="stat-number">8-STAGE</span>
+              <span className="stat-unit">LIFECYCLE ROADMAP</span>
+              <span className="stat-caption">Concept Closure to Site GFC Handover</span>
+            </div>
+            <div className="project-stat-sep" aria-hidden="true"></div>
+            <div className="project-stat-box">
+              <span className="stat-number">ZERO</span>
+              <span className="stat-unit">SITE CLASHES</span>
+              <span className="stat-caption">Integrated 3D/2D Spatial Coordination</span>
+            </div>
+          </div>
+
+          {/* Interactive Discipline Toolbar */}
+          <div className="services-toolbar">
+            <div className="toolbar-left">
+              <div className="category-tabs" role="tablist">
+                {disciplineTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    className={`cat-tab ${activeDiscipline === tab.id ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveDiscipline(tab.id);
+                      if (tab.id === 'All') {
+                        setSearchParams({});
+                      } else {
+                        setSearchParams({ discipline: tab.id });
+                      }
+                    }}
+                    role="tab"
+                    aria-selected={activeDiscipline === tab.id}
+                  >
+                    <span className="tab-icon" aria-hidden="true">{tab.icon}</span>
+                    <span>{tab.label}</span>
+                    <span className="tab-badge">{tab.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="toolbar-right">
+              <div className="project-search-box">
+                <span className="search-icon" aria-hidden="true">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search system, code, BOQ, standard..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label="Search engineering services"
+                />
+                {searchQuery && (
+                  <button
+                    className="search-clear-btn"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Clear search"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Discipline Cards Showcase */}
+          <div className="services-discipline-list">
+            {filteredServices.length === 0 ? (
+              <div className="no-projects-found">
+                <h3>No engineering systems matched your query</h3>
+                <p>Try searching for keywords like "PHE", "Substation", "Sprinkler", "NOC", "VRF", or "BOQ".</p>
+                <button
+                  className="btn btn-yellow"
+                  onClick={() => {
+                    setActiveDiscipline('All');
+                    setSearchQuery('');
+                    setSearchParams({});
+                  }}
+                >
+                  Reset Discipline Filters
+                </button>
+              </div>
+            ) : (
+              filteredServices.map((service) => (
+                <article
+                  className="service-discipline-card"
+                  key={service.id}
+                  id={service.disciplineKey}
+                >
+                  {/* Card Header */}
+                  <div className="discipline-card-header">
+                    <div className="header-meta-left">
+                      <div className="discipline-icon-badge" aria-hidden="true">
+                        {service.icon}
+                      </div>
+                      <div className="discipline-meta-titles">
+                        <div className="discipline-meta-top">
+                          <span className="discipline-number-tag">{service.disciplineNumber}</span>
+                          <span className="discipline-badge-kicker">{service.badge}</span>
+                        </div>
+                        <h2 className="discipline-title">{service.title}</h2>
+                        <p className="discipline-tagline">{service.tagline}</p>
+                      </div>
+                    </div>
+                    <div className="header-meta-right">
+                      <div className="stat-pill-badge">
+                        <span className="stat-pill-value">{service.statHighlight.value}</span>
+                        <span className="stat-pill-label">{service.statHighlight.label}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Discipline Narrative */}
+                  <div className="discipline-narrative">
+                    <p>{service.description}</p>
+                  </div>
+
+                  {/* Technical Breakdown: 2 Columns */}
+                  <div className="discipline-details-grid">
+                    {/* Column 1: Core Scope Checklist */}
+                    <div className="technical-panel scope-panel">
+                      <div className="panel-header">
+                        <span className="panel-icon">⚙</span>
+                        <h4>Core Engineering Scope &amp; Systems</h4>
+                      </div>
+                      <ul className="technical-checklist">
+                        {service.coreScope.map((item, idx) => (
+                          <li key={idx}>
+                            <span className="check-bullet" aria-hidden="true">◆</span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Column 2: Standards & Deliverables */}
+                    <div className="technical-panel specs-panel">
+                      {/* Governing Standards */}
+                      <div className="sub-panel">
+                        <div className="panel-header">
+                          <span className="panel-icon">⚖</span>
+                          <h4>Governing Codes &amp; Statutory Standards</h4>
+                        </div>
+                        <div className="standards-chips-grid">
+                          {service.standards.map((std, idx) => (
+                            <div className="standard-chip-card" key={idx}>
+                              <strong className="std-code">{std.code}</strong>
+                              <span className="std-name">{std.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Typical Deliverables */}
+                      <div className="sub-panel" style={{ marginTop: '22px' }}>
+                        <div className="panel-header">
+                          <span className="panel-icon">📐</span>
+                          <h4>GFC &amp; Documentation Deliverables</h4>
+                        </div>
+                        <ul className="deliverables-checklist">
+                          {service.deliverables.map((deliv, idx) => (
+                            <li key={idx}>
+                              <span className="deliv-icon" aria-hidden="true">✔</span>
+                              <span>{deliv}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Action Footer */}
+                  <div className="discipline-card-footer">
+                    <div className="footer-left-info">
+                      <span className="consultation-ready-tag">● Scope Ready for Consultation</span>
+                      <span className="footer-doc-note">GFC 2D/3D DWG + PDF Drawings &amp; Schedules</span>
+                    </div>
+                    <div className="footer-actions">
+                      <Link
+                        className="btn btn-yellow"
+                        to={`/contact-us?service=${service.id}`}
+                      >
+                        Request {service.shortTitle} Scope ↗
+                      </Link>
+                      <a
+                        className="btn btn-outline"
+                        href={`https://wa.me/918489274385?text=${encodeURIComponent(`Hello GGA, I would like to consult on ${service.title} for our upcoming building project.`)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        Discuss on WhatsApp ↗
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))
+            )}
+          </div>
+
+          {/* 8-Stage Engineering Coordination Lifecycle */}
+          <section className="services-lifecycle-section">
+            <div className="section-header-centered">
+              <span className="services-kicker">OUR PROVEN METHODOLOGY</span>
+              <h2>The 8-Stage MEP Coordination Lifecycle</h2>
+              <p>
+                From initial architectural massing to Good-For-Construction (GFC) release and on-site vendor reviews, our structured methodology eliminates design ambiguities and avoids costly site rework.
+              </p>
+            </div>
+
+            <div className="lifecycle-grid">
+              {coordinationStages.map((stage) => (
+                <div className="lifecycle-step-card" key={stage.step}>
+                  <div className="step-card-top">
+                    <span className="step-badge-tag">{stage.badge}</span>
+                    <span className="step-number-pill">{stage.step}</span>
+                  </div>
+                  <h3 className="step-title">{stage.title}</h3>
+                  <h4 className="step-subtitle">{stage.subtitle}</h4>
+                  <p className="step-desc">{stage.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Clash-Free Coordination Guarantee Matrix */}
+          <section className="services-matrix-section">
+            <div className="section-header-centered">
+              <span className="services-kicker">THE VALUE OF COORDINATION</span>
+              <h2>Uncoordinated Design vs. GGA Coordinated Engineering</h2>
+              <p>
+                Why leading developers and architects partner with GGA to protect their structural integrity, ceiling heights, and construction budgets.
+              </p>
+            </div>
+
+            <div className="coordination-matrix-cards">
+              {coordinationMatrix.map((item, idx) => (
+                <div className="matrix-comparison-card" key={idx}>
+                  <div className="matrix-aspect-header">
+                    <span className="aspect-badge">DIMENSION 0{idx + 1}</span>
+                    <h3>{item.aspect}</h3>
+                  </div>
+                  <div className="matrix-columns">
+                    <div className="matrix-col col-uncoordinated">
+                      <div className="col-status-bar bar-bad">
+                        <span>✕</span> Traditional Fragmented Design
+                      </div>
+                      <p>{item.uncoordinated}</p>
+                    </div>
+                    <div className="matrix-col col-coordinated">
+                      <div className="col-status-bar bar-good">
+                        <span>✔</span> GGA Integrated Coordination
+                      </div>
+                      <p>{item.ggaMethod}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Building Typologies We Engineer */}
+          <section className="services-typologies-section">
+            <div className="section-header-centered">
+              <span className="services-kicker">SECTOR VERSATILITY</span>
+              <h2>Engineered for Every Building Typology</h2>
+              <p>
+                Tailored building services design backed by extensive cross-sector experience across South India and the Gulf.
+              </p>
+            </div>
+
+            <div className="typologies-grid">
+              {buildingTypologies.map((t, idx) => (
+                <div className="typology-card" key={idx}>
+                  <span className="typology-emoji" aria-hidden="true">{t.icon}</span>
+                  <h4>{t.title}</h4>
+                  <p>{t.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Bottom Consultation CTA */}
+          <div className="services-cta-banner">
+            <div className="cta-left">
+              <span className="services-kicker kicker-light">START YOUR DESIGN CONSULTATION</span>
+              <h3>Ready to engineer a clash-free, code-compliant building?</h3>
+              <p>
+                Share your architectural floor plans and scope requirements with GGA's engineering team for preliminary coordination review.
+              </p>
+            </div>
+            <div className="cta-actions">
+              <Link className="btn btn-yellow" to="/contact-us">
+                Request Scope Consultation ↗
+              </Link>
+              <a
+                className="btn btn-outline"
+                href="https://wa.me/918489274385?text=Hello%20GGA%2C%20I%20would%20like%20to%20discuss%20our%20MEP%20design%20scope."
+                target="_blank"
+                rel="noreferrer"
+              >
+                Direct WhatsApp Chat ↗
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function ContentPage() {
   const { slug } = useParams();
   if (slug === 'projects') {
     return <ProjectsPage />;
   }
+  if (slug === 'services') {
+    return <ServicesPage />;
+  }
   const fallback = FALLBACK[slug] || FALLBACK['about-us'];
   const page = useData(`/pages/${slug}`, fallback);
-  useEffect(()=>{ document.title = page.seo_title || `${page.title} | GGA MEP Design Consultants`; const meta=document.querySelector('meta[name="description"]'); if(meta && page.seo_description) meta.content=page.seo_description; },[page,slug]);
-  const services = useData('/services', []);
-  return <><section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> GGA DESIGN CONSULTANTS</span><h1>{page.title}</h1><p>{page.subtitle}</p></div><PencilMark/></div></section>
-    <section className="section"><EngineeringBackground variant="light"/><div className="container content-layout"><div className="content-main"><span className="eyebrow dark">GET GREAT ADVICE</span><h2>{page.subtitle}</h2><p className="body-copy">{page.body}</p>
-      {slug==='services' && <>
-        <div className="services-intro">
-          <span className="services-kicker">OUR CORE CAPABILITIES</span>
-          <h2>MEP design services, clearly coordinated.</h2>
-          <p>GGA's company profile lists plumbing, electrical and fire-fighting design services, including fire-alarm systems. HVAC is also listed among the company's service areas. The exact deliverables are agreed for each project.</p>
-        </div>
-        <div className="services-detail-grid">
-          {[
-            {number:'01',title:'Plumbing Design',intro:'Water supply, drainage and water-management systems for buildings.',items:['Drainage collection and disposal systems','Internal and external plumbing systems','Water supply collection and distribution','Booster systems for water distribution','Storm-water design and discharge','Rainwater harvesting systems','Sewage treatment plant (STP)','Water treatment plant (WTP)'],icon:'↗'},
-            {number:'02',title:'Electrical Design',intro:'Building electrical design and power-distribution support.',items:['Electrical load calculations','Power distribution system design','Earthing systems','Low-voltage building automation, communication, safety, surveillance and networks','HT/LT power distribution, panels and cabling','Lighting design and luminaire selection','DC distribution systems','Electrical design for building services','DG sets and transformers','UPS (uninterruptible power supply)'],icon:'ϟ'},
-            {number:'03',title:'Fire-Fighting Design',intro:'Fire-protection systems and hydraulic design support.',items:['Internal and external hydrant systems','Fire pump room design coordination','Sprinkler systems','Fire-system hydraulic calculations','Fire extinguishers','Fire-safety signage'],icon:'✳'},
-            {number:'04',title:'Fire Alarm Systems',intro:'Fire-alarm systems included in GGA’s listed building-safety services.',items:['Fire-alarm system design coordination','Coordination with related building services','Project-specific scope and requirements review'],icon:'◎'},
-            {number:'05',title:'HVAC Design',intro:'HVAC is listed as a GGA service area on the company business card.',items:['Discuss HVAC design requirements for your project','Coordinate the agreed scope with other MEP services','Confirm project-specific deliverables during consultation'],icon:'⌁'}
-          ].map((service)=><article className="service-detail-card" key={service.number}>
-            <div className="service-detail-top"><span className="service-detail-icon" aria-hidden="true">{service.icon}</span><span className="service-detail-number">{service.number}</span></div>
-            <h3>{service.title}</h3><p className="service-detail-intro">{service.intro}</p>
-            <ul>{service.items.map((item)=><li key={item}>{item}</li>)}</ul>
-          </article>)}
-        </div>
-        <section className="scope-work">
-          <div className="scope-heading"><span className="services-kicker">PROJECT SUPPORT</span><h2>Scope of work</h2><p>As described in the GGA MEP company profile, support may include the following activities, subject to the agreed project scope.</p></div>
-          <div className="scope-grid">
-            {[
-              'Coordination with design stakeholders for detailed MEP design development',
-              'Coordination with the builder, architect and structural consultant for concept closure',
-              'Site visits and meetings to support execution as per design',
-              'Technical clarifications and RFI clearance',
-              'Technical support for finalisation of specifications',
-              'Technical support for tender coordination',
-              'Issuance of GFC drawings in soft and hard copy',
-              'Review and approval of vendor shop drawings and GA drawings'
-            ].map((item,index)=><div className="scope-item" key={item}><span>{String(index+1).padStart(2,'0')}</span><p>{item}</p></div>)}
+  useEffect(()=>{
+    document.title = page.seo_title || `${page.title} | GGA MEP Design Consultants`;
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta && page.seo_description) meta.content = page.seo_description;
+  }, [page, slug]);
+
+  return (
+    <>
+      <section className="page-hero">
+        <EngineeringBackground variant="page"/>
+        <div className="container page-hero-inner">
+          <div>
+            <span className="eyebrow"><span className="dot"></span> GGA DESIGN CONSULTANTS</span>
+            <h1>{page.title}</h1>
+            <p>{page.subtitle}</p>
           </div>
-        </section>
-        <section className="services-cta">
-          <div><span className="services-kicker">HAVE A PROJECT IN MIND?</span><h2>Let's discuss your MEP design requirements.</h2><p>Share your project type, location and required services with the GGA team.</p></div>
-          <Link className="btn btn-yellow" to="/contact-us">Discuss your project ↗</Link>
-        </section>
-      </>}
-      {slug==='about-us' && <div className="detail-list">{['MEP design development coordination','Coordination with builders, architects and structural consultants','Site visits and meetings to support execution as per design','Technical clarifications and RFI clearance','Specification finalisation and tender coordination','GFC drawing issuance in soft and hard copy','Review of vendor shop and GA drawings'].map((x,i)=><article key={x}><span className="detail-num">0{i+1}</span><div><h3>{x}</h3><p>Project-specific support agreed according to scope, programme and applicable requirements.</p></div></article>)}</div>}
-    </div><aside className="contact-card"><span className="eyebrow">LET'S TALK</span><h3>Have a project in mind?</h3><p>Tell us about your building and MEP design requirements.</p><Link className="btn btn-yellow" to="/contact-us">Contact GGA ↗</Link><div className="aside-rule"></div><p className="aside-contact">✉ <a href="mailto:ggamepconsultant@gmail.com">ggamepconsultant@gmail.com</a></p><p className="aside-contact">☎ <a href="tel:+918489274385">+91 8489274385</a></p></aside></div></section>
-  </>;
+          <PencilMark/>
+        </div>
+      </section>
+      <section className="section">
+        <EngineeringBackground variant="light"/>
+        <div className="container content-layout">
+          <div className="content-main">
+            <span className="eyebrow dark">GET GREAT ADVICE</span>
+            <h2>{page.subtitle}</h2>
+            <p className="body-copy">{page.body}</p>
+            {slug === 'about-us' && (
+              <div className="detail-list">
+                {[
+                  'MEP design development coordination',
+                  'Coordination with builders, architects and structural consultants',
+                  'Site visits and meetings to support execution as per design',
+                  'Technical clarifications and RFI clearance',
+                  'Specification finalisation and tender coordination',
+                  'GFC drawing issuance in soft and hard copy',
+                  'Review of vendor shop and GA drawings'
+                ].map((x, i) => (
+                  <article key={x}>
+                    <span className="detail-num">0{i+1}</span>
+                    <div>
+                      <h3>{x}</h3>
+                      <p>Project-specific support agreed according to scope, programme and applicable requirements.</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+          <aside className="contact-card">
+            <span className="eyebrow">LET'S TALK</span>
+            <h3>Have a project in mind?</h3>
+            <p>Tell us about your building and MEP design requirements.</p>
+            <Link className="btn btn-yellow" to="/contact-us">Contact GGA ↗</Link>
+            <div className="aside-rule"></div>
+            <p className="aside-contact">✉ <a href="mailto:ggamepconsultant@gmail.com">ggamepconsultant@gmail.com</a></p>
+            <p className="aside-contact">☎ <a href="tel:+918489274385">+91 8489274385</a></p>
+          </aside>
+        </div>
+      </section>
+    </>
+  );
 }
 
 function Contact() {
@@ -1140,5 +1895,5 @@ function FloatingActions({ settings }) {
 
 export default function App() {
  const settings=useData('/settings',{});
- return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<ContentPage/>}/><Route path="/services" element={<ContentPage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
+ return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<ContentPage/>}/><Route path="/services" element={<ServicesPage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
 }
