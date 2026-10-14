@@ -1774,9 +1774,9 @@ function AboutPage() {
 
           {/* Tagline Showcase Ribbon */}
           <div className="about-tagline-ribbon">
-            <div className="tagline-kicker">OUR OFFICIAL TAGLINE</div>
-            <h2 className="tagline-quote">“Designing Smarter Buildings. Engineering Safer Futures.”</h2>
-            <p className="tagline-sub">
+            <div className="tagline-kicker" style={{ color: '#ffdf24' }}>OUR OFFICIAL TAGLINE</div>
+            <h2 className="tagline-quote" style={{ color: '#ffffff' }}>“Designing Smarter Buildings. Engineering Safer Futures.”</h2>
+            <p className="tagline-sub" style={{ color: '#f1f5f9' }}>
               A commitment embedded in every design calculation, schematic layout, and spatial coordination drawing we produce.
             </p>
           </div>
