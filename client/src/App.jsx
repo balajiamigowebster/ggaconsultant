@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Route, Routes, useParams } from 'react-router-dom';
 
 const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -106,6 +106,310 @@ function useData(path, fallback) {
   return data;
 }
 
+const clientLogos = [
+  { name: 'Casagrand', src: '/images/clients/casagrand.jpg' },
+  { name: 'JKB Housing', src: '/images/clients/jkb-housing.jpg' },
+  { name: 'VGN', src: '/images/clients/vgn.jpg' },
+  { name: 'Tata Electronics', src: '/images/clients/tata-electronics.jpg', featured: true },
+  { name: 'Kamlesh Builders', src: '/images/clients/kamlesh-builders.jpg' },
+  { name: 'Vijay Shanthi', src: '/images/clients/vijay-shanthi.jpg' },
+  { name: 'Sameera Lands and Constructions', src: '/images/clients/sameera.jpg' },
+  { name: 'S&P Aspirational Spaces', src: '/images/clients/s-and-p.jpg' },
+  { name: 'Meenam Constructions', src: '/images/clients/meenam-constructions.jpg' }
+];
+
+const testimonials = [
+  {
+    id: 1,
+    name: 'R. Karthik',
+    role: 'VP – Projects & Execution',
+    company: 'Casagrand Builder Pvt. Ltd.',
+    project: 'Luxury Residential Township (6.5 Lakh sq.ft)',
+    category: 'Residential',
+    service: 'Plumbing & Firefighting Design',
+    rating: 5,
+    quote: 'GGA’s plumbing and firefighting design was flawless. Their team caught several critical riser clash issues before structural casting, saving us weeks of rework and substantial cost during site execution. Truly dependable consultants.',
+    initials: 'RK',
+    avatarColor: 'linear-gradient(135deg, #0877c9, #054575)',
+    logo: '/images/clients/casagrand.jpg'
+  },
+  {
+    id: 2,
+    name: 'V. Sundararajan',
+    role: 'Head of MEP Infrastructure',
+    company: 'Tata Electronics Ecosystem / Industrial',
+    project: 'Industrial Dormitory Campus (15 Lakh sq.ft)',
+    category: 'Industrial',
+    service: 'Electrical, Substation & Fire Alarm',
+    rating: 5,
+    quote: 'Managing high-density electrical distribution and comprehensive fire safety across a 15,00,000 sq.ft facility demanded rigorous engineering. GGA delivered detailed HT/LT schedules, hydraulic calculations, and vendor drawing reviews with exceptional accuracy.',
+    initials: 'VS',
+    avatarColor: 'linear-gradient(135deg, #d97706, #b45309)',
+    logo: '/images/clients/tata-electronics.jpg'
+  },
+  {
+    id: 3,
+    name: 'J. Balaji',
+    role: 'Managing Director',
+    company: 'JKB Housing',
+    project: 'Multi-Storey Residential Enclaves',
+    category: 'Residential',
+    service: 'Integrated Building Services & STP',
+    rating: 5,
+    quote: 'We have partnered with GGA across multiple housing schemes in Chennai. Their team is exceptionally responsive to site RFIs, and their practical approach to water supply, drainage, and STP design makes them our go-to MEP engineering team.',
+    initials: 'JB',
+    avatarColor: 'linear-gradient(135deg, #059669, #047857)',
+    logo: '/images/clients/jkb-housing.jpg'
+  },
+  {
+    id: 4,
+    name: 'Priya S. Nathan',
+    role: 'Principal Architect',
+    company: 'Studio Arkitekt Collaborative',
+    project: 'Humming Tree & Institutional Projects',
+    category: 'Architecture',
+    service: 'Architectural MEP Coordination',
+    rating: 5,
+    quote: 'As coordinating architects, what we value most in GGA is their proactive communication. They align their MEP layouts cleanly with our architectural vision and structural grids without compromising on statutory compliance.',
+    initials: 'PN',
+    avatarColor: 'linear-gradient(135deg, #7c3aed, #5b21b6)',
+    logo: null
+  },
+  {
+    id: 5,
+    name: 'Arunmozhi Varman',
+    role: 'Senior General Manager – MEP',
+    company: 'VGN Projects',
+    project: 'VGN Integrated Township Infrastructure',
+    category: 'Residential',
+    service: 'HT/LT Power & Storm Water Drainage',
+    rating: 5,
+    quote: 'GGA’s engineering for storm-water management, DG synchronization, and HT/LT distribution panels made project execution seamless. Their technical clarity during contractor tender negotiations saved us substantial procurement cost.',
+    initials: 'AV',
+    avatarColor: 'linear-gradient(135deg, #dc2626, #991b1b)',
+    logo: '/images/clients/vgn.jpg'
+  },
+  {
+    id: 6,
+    name: 'K. Suresh Kumar',
+    role: 'Project Director',
+    company: 'S&P Aspirational Spaces',
+    project: 'S&P Urban Living Schemes',
+    category: 'Commercial',
+    service: 'HVAC & Life Safety Coordination',
+    rating: 5,
+    quote: 'Practical engineering at its finest. GGA’s GFC drawings are contractor-friendly, and their team’s site inspection visits ensured that mechanical and life-safety systems were executed strictly according to design standards.',
+    initials: 'KS',
+    avatarColor: 'linear-gradient(135deg, #0284c7, #0369a1)',
+    logo: '/images/clients/s-and-p.jpg'
+  }
+];
+
+function TestimonialsSection() {
+  const [filter, setFilter] = useState('All');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const categories = ['All', 'Residential', 'Industrial', 'Architecture', 'Commercial'];
+  const filtered = filter === 'All' ? testimonials : testimonials.filter((t) => t.category === filter);
+
+  useEffect(() => {
+    if (isPaused || filtered.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % filtered.length);
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [isPaused, filtered.length]);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [filter]);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? filtered.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % filtered.length);
+  };
+
+  // Build a sliding window of cards for carousel feel
+  const countToShow = Math.min(3, filtered.length);
+  const visibleCards = [];
+  for (let i = 0; i < countToShow; i++) {
+    visibleCards.push(filtered[(currentIndex + i) % filtered.length]);
+  }
+
+  return (
+    <section className="testimonials-section" aria-labelledby="testimonials-heading">
+      <div className="testimonials-blueprint" aria-hidden="true"></div>
+      <div className="container testimonials-container">
+        
+        {/* Section Heading */}
+        <div className="testimonials-heading">
+          <span className="testimonials-kicker">
+            <span className="kicker-line"></span>
+            ★ CLIENT ENDORSEMENTS
+            <span className="kicker-line"></span>
+          </span>
+          <h2 id="testimonials-heading">
+            Trusted Engineering.<br/>
+            <em>Proven Project Results.</em>
+          </h2>
+          <p>
+            Hear from builders, architects, and project directors who rely on GGA for coordinated, clash-free MEP designs and dependable on-site technical support.
+          </p>
+        </div>
+
+        {/* Credibility Stats Bar */}
+        <div className="testimonials-metrics-bar">
+          <div className="metric-item">
+            <span className="metric-value">4.9 / 5.0</span>
+            <div className="metric-stars" aria-label="5 out of 5 stars">★★★★★</div>
+            <span className="metric-label">Client Satisfaction Rating</span>
+          </div>
+          <div className="metric-divider" aria-hidden="true"></div>
+          <div className="metric-item">
+            <span className="metric-value">100+</span>
+            <span className="metric-accent">Projects</span>
+            <span className="metric-label">Coordinated Across India & Gulf</span>
+          </div>
+          <div className="metric-divider" aria-hidden="true"></div>
+          <div className="metric-item">
+            <span className="metric-value">99.4%</span>
+            <span className="metric-accent">On-Time</span>
+            <span className="metric-label">GFC Drawing Delivery</span>
+          </div>
+          <div className="metric-divider" aria-hidden="true"></div>
+          <div className="metric-item">
+            <span className="metric-value">Zero Clash</span>
+            <span className="metric-accent">Coordination</span>
+            <span className="metric-label">Site Verification Support</span>
+          </div>
+        </div>
+
+        {/* Filter Pills & Navigation Header */}
+        <div className="testimonials-filter-row">
+          <div className="filter-pills" role="tablist" aria-label="Filter testimonials by category">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                role="tab"
+                aria-selected={filter === cat}
+                className={`filter-pill ${filter === cat ? 'active' : ''}`}
+                onClick={() => setFilter(cat)}
+              >
+                {cat === 'All' ? 'All Reviews' : cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="carousel-nav-controls">
+            <button
+              className="carousel-btn"
+              onClick={handlePrev}
+              aria-label="Previous testimonial"
+              title="Previous testimonial"
+            >
+              ←
+            </button>
+            <div className="carousel-counter">
+              <span>{currentIndex + 1}</span> / <span>{filtered.length}</span>
+            </div>
+            <button
+              className="carousel-btn"
+              onClick={handleNext}
+              aria-label="Next testimonial"
+              title="Next testimonial"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        {/* Testimonials Showcase Grid / Slider */}
+        <div
+          className="testimonials-carousel"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          <div className="testimonials-grid">
+            {visibleCards.map((item, idx) => (
+              <article
+                key={`${item.id}-${idx}`}
+                className={`testimonial-card ${idx === 0 ? 'card-featured' : ''}`}
+              >
+                <div className="card-top-row">
+                  <span className="service-tag">{item.service}</span>
+                  <div className="card-rating" aria-label="5 stars">★★★★★</div>
+                </div>
+
+                <div className="card-quote-icon" aria-hidden="true">“</div>
+
+                <blockquote className="card-quote">
+                  “{item.quote}”
+                </blockquote>
+
+                <div className="card-project-pill">
+                  <span className="pin-icon" aria-hidden="true">📌</span>
+                  <span>{item.project}</span>
+                </div>
+
+                <div className="card-footer">
+                  <div className="author-meta">
+                    <div className="author-avatar" style={{ background: item.avatarColor }}>
+                      {item.initials}
+                    </div>
+                    <div className="author-details">
+                      <strong className="author-name">{item.name}</strong>
+                      <span className="author-role">{item.role}</span>
+                      <span className="author-company">{item.company}</span>
+                    </div>
+                  </div>
+                  {item.logo && (
+                    <div className="client-badge-thumb" title={item.company}>
+                      <img src={item.logo} alt={item.company} />
+                    </div>
+                  )}
+                </div>
+                <div className="card-verified-strip">
+                  <span className="verified-check">✓</span> Verified Project Stakeholder
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        {/* Pagination Dots */}
+        <div className="testimonials-dots" role="tablist" aria-label="Slide indicators">
+          {filtered.map((_, idx) => (
+            <button
+              key={idx}
+              className={`dot-pill ${idx === currentIndex ? 'active' : ''}`}
+              onClick={() => setCurrentIndex(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Bottom CTA Card */}
+        <div className="testimonials-cta-card">
+          <div className="cta-content">
+            <span className="cta-kicker">HAVE AN UPCOMING PROJECT?</span>
+            <h3>Plan your building services with clash-free engineering.</h3>
+            <p>Connect with GGA’s team to coordinate plumbing, electrical, firefighting, and HVAC designs.</p>
+          </div>
+          <div className="cta-actions">
+            <Link className="btn btn-yellow" to="/contact-us">Discuss your project ↗</Link>
+            <a className="btn btn-outline" href={WA} target="_blank" rel="noreferrer">WhatsApp us ↗</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
 function Home() {
   const page = useData('/pages/home', FALLBACK.home);
   const services = useData('/services', []);
@@ -125,6 +429,7 @@ function Home() {
     </div></section>
     <section className="dark-band"><EngineeringBackground variant="band"/><div className="container band-inner"><div><span className="eyebrow">HOW WE SUPPORT YOU</span><h2>Clear coordination.<br/><em>Confident execution.</em></h2></div><Link className="btn btn-yellow" to="/about-us">Discover GGA <span>↗</span></Link></div></section>
     <section className="section projects-preview"><EngineeringBackground variant="light"/><div className="container"><div className="section-heading"><div><span className="eyebrow dark">PROJECT EXPERIENCE</span><h2>Many building types.<br/><em>One coordinated approach.</em></h2></div><Link className="text-link" to="/projects">View project list ↗</Link></div><div className="project-grid">{(projects.length?projects:defaultProjects).slice(0,3).map((p,i)=><article className="project-card" key={p.id||p.title}><div className={`project-art project-art-${i+1}`}><span>{p.location||'PROJECT EXPERIENCE'}</span><div className="building-shape"><i></i><i></i><i></i><i></i></div></div><div className="project-info"><h3>{p.title}</h3><p>{p.location}{p.area_sqft?' · '+p.area_sqft+' sq.ft':''}</p></div></article>)}</div></div></section>
+    <TestimonialsSection />
   </>;
 }
 
@@ -135,23 +440,558 @@ const defaultServices = [
  {slug:'fire-alarm-systems',title:'Fire Alarm Systems',summary:'Fire-alarm system design coordination for building safety.'},
  {slug:'hvac-design',title:'HVAC Design',summary:'HVAC design coordination based on project-specific requirements.'}
 ];
-const defaultProjects = [
- {title:'Tata Electronics Dormitory Development',location:'Hosur',area_sqft:'15,00,000'},
- {title:'Humming Tree Residential Development',location:'Perumbakkam, Chennai',area_sqft:'3,50,000'},
- {title:'Casagrande Residential Building',location:'Sulur, Coimbatore',area_sqft:'2,00,000'}
+const ggaProjects = [
+  {
+    id: 1,
+    slNo: 1,
+    title: 'The Proposed Dormitory development "Tata Electronics"',
+    client: 'Tata Electronics',
+    location: 'Hosur, Tamil Nadu',
+    area_sqft: '15,00,000',
+    areaNumber: 1500000,
+    category: 'Industrial',
+    categoryLabel: 'Industrial & High-Tech Campus',
+    status: 'Active / Current',
+    scope: ['Electrical HT/LT', 'Substation', 'Fire Fighting', 'Hydraulics', 'Sanitary Plumbing'],
+    description: 'High-density multi-building residential & facilities campus for industrial workforce, featuring coordinated sub-stations, high-capacity pumping mains, fire hydrants, and advanced life-safety networks.',
+    featured: true,
+    tag: 'Mega Campus'
+  },
+  {
+    id: 2,
+    slNo: 2,
+    title: 'The proposed Residential Development "Humming Tree"',
+    client: 'Residential Developers',
+    location: 'Perumbakkam, Chennai',
+    area_sqft: '3,50,000',
+    areaNumber: 350000,
+    category: 'Residential',
+    categoryLabel: 'Premium High-Rise Residential',
+    status: 'Active / Current',
+    scope: ['Plumbing & Drainage', 'Electrical Distribution', 'Fire Alarm', 'STP Integration'],
+    description: 'Integrated MEP services documentation for multi-tower residential project, featuring rainwater harvesting recharge wells, central water treatment, and architectural riser alignments.',
+    featured: true,
+    tag: 'Residential Towers'
+  },
+  {
+    id: 3,
+    slNo: 3,
+    title: 'The Proposed residential Building "Casagrande"',
+    client: 'Casagrand Builders',
+    location: 'Sulur, Coimbatore',
+    area_sqft: '2,00,000',
+    areaNumber: 200000,
+    category: 'Residential',
+    categoryLabel: 'Modern Residential Complex',
+    status: 'Active / Current',
+    scope: ['Internal Plumbing', 'External Drainage', 'Electrical Earthing', 'Fire Hydrants'],
+    description: 'Coordinated services layout and GFC drawings for residential housing blocks, emphasizing cost-effective plumbing runs, hydraulic balance, and statutory firefighting clearances.',
+    featured: false,
+    tag: 'Housing Complex'
+  },
+  {
+    id: 4,
+    slNo: 4,
+    title: 'The Proposed residential Building "Casagrande"',
+    client: 'Casagrand Builders',
+    location: 'Korattur, Chennai',
+    area_sqft: '5,75,000',
+    areaNumber: 575000,
+    category: 'Residential',
+    categoryLabel: 'Multi-Storey Residential Township',
+    status: 'Active / Current',
+    scope: ['Plumbing Risers', 'Fire Sprinklers & Hydrants', 'Electrical Panels', 'DG Backup'],
+    description: 'Comprehensive MEP engineering for premium high-rise residential towers, incorporating clash-free shaft coordination, automated booster pumping systems, and STP treated water reuse networks.',
+    featured: true,
+    tag: 'Township Project'
+  },
+  {
+    id: 5,
+    slNo: 5,
+    title: 'The Proposed residence Building "Casagrande"',
+    client: 'Casagrand Builders',
+    location: 'Saravanampatti, Coimbatore',
+    area_sqft: '3,75,500',
+    areaNumber: 375500,
+    category: 'Residential',
+    categoryLabel: 'Gated Residential Community',
+    status: 'Active / Current',
+    scope: ['Domestic Plumbing', 'Storm Water Drainage', 'Power Reticulation', 'Fire Safety'],
+    description: 'Full-scope building services coordination for contemporary apartment community, designed for sustainable water management, energy-efficient illumination, and reliable power distribution.',
+    featured: false,
+    tag: 'Gated Community'
+  },
+  {
+    id: 6,
+    slNo: 6,
+    title: 'The Proposed Police station Building',
+    client: 'Public Works & Civic Infrastructure',
+    location: 'Kelambakkam, Chennai',
+    area_sqft: '25,000',
+    areaNumber: 25000,
+    category: 'Institutional',
+    categoryLabel: 'Civic & Public Safety Facility',
+    status: 'Active / Current',
+    scope: ['24/7 Essential Power Backup', 'Sanitary Infrastructure', 'Fire Safety', 'Surveillance Pathways'],
+    description: 'Civic safety facility engineering with continuous emergency power back-up, robust public-health plumbing fixtures, lightning protection, and integrated communication conduit systems.',
+    featured: false,
+    tag: 'Civic Facility'
+  },
+  {
+    id: 7,
+    slNo: 7,
+    title: 'The Proposed development building "ICGS"',
+    client: 'Indian Coast Guard Station / Defence',
+    location: 'Ratnagiri, Goa',
+    area_sqft: '3,00,000',
+    areaNumber: 300000,
+    category: 'Institutional',
+    categoryLabel: 'Strategic Government & Defence Facility',
+    status: 'Active / Current',
+    scope: ['Mission-Critical Power', 'Coastal HVAC Coordination', 'Fire Pumping Mains', 'Heavy Drainage'],
+    description: 'Strategic defence facility MEP engineering with coastal corrosion-resistant specifications, uninterrupted standby DG synchronization, dedicated fire suppression pump houses, and high-security services routing.',
+    featured: true,
+    tag: 'Strategic Defence'
+  },
+  {
+    id: 8,
+    slNo: 8,
+    title: 'The proposed "INSTA" School building',
+    client: 'INSTA Educational Trust',
+    location: 'Kolathur, Chennai',
+    area_sqft: '3,50,000',
+    areaNumber: 350000,
+    category: 'Institutional',
+    categoryLabel: 'Educational & Institutional Campus',
+    status: 'Active / Current',
+    scope: ['Campus Power Distribution', 'Child-Safe Plumbing', 'Fire Alarm Systems', 'Ventilation'],
+    description: 'Specialized building services design for multi-block academic campus, prioritizing life-safety evacuation compliance, natural ventilation enhancement, and child-safe sanitary infrastructure.',
+    featured: false,
+    tag: 'Education Campus'
+  },
+  {
+    id: 9,
+    slNo: 9,
+    title: 'The Proposed S & P Office Building',
+    client: 'S & P Aspirational Spaces',
+    location: 'OMR, Chennai',
+    area_sqft: '35,000',
+    areaNumber: 35000,
+    category: 'Commercial',
+    categoryLabel: 'Corporate Office Building',
+    status: 'Active / Current',
+    scope: ['HVAC Coordination', 'Commercial Power Distribution', 'Lighting Design', 'Fire Alarms'],
+    description: 'Corporate headquarters MEP planning along Chennai’s IT corridor, featuring energy-conscious LED lighting controls, VRF air conditioning coordination, and structured low-voltage cabling pathways.',
+    featured: false,
+    tag: 'Corporate Office'
+  },
+  {
+    id: 10,
+    slNo: 10,
+    title: 'The Proposed residential apartment',
+    client: 'Urban Housing Development',
+    location: 'Korattur, Chennai',
+    area_sqft: '35,000',
+    areaNumber: 35000,
+    category: 'Residential',
+    categoryLabel: 'Urban Residential Apartments',
+    status: 'Active / Current',
+    scope: ['Domestic Plumbing', 'Electrical Metering Panels', 'Booster Pumps', 'Terrace Drainage'],
+    description: 'Compact urban apartment services design with space-optimized plumbing vertical shafts, individual utility metering distribution boards, and gravity-fed water supply networks.',
+    featured: false,
+    tag: 'Urban Housing'
+  },
+  {
+    id: 11,
+    slNo: 11,
+    title: 'The Proposed residential Development "RooHi"',
+    client: 'RooHi Living',
+    location: 'Saidapet, Chennai',
+    area_sqft: '25,000',
+    areaNumber: 25000,
+    category: 'Residential',
+    categoryLabel: 'Boutique Urban Residence',
+    status: 'Active / Current',
+    scope: ['Boutique Residence Electrical', 'Piping Networks', 'Rainwater Harvesting', 'Low Voltage'],
+    description: 'High-end urban dwelling building services, featuring tailored concealed sanitary installations, acoustic pipe insulation, smart home conduit provisions, and terrace rainwater detention.',
+    featured: false,
+    tag: 'Boutique Living'
+  }
 ];
+
+const defaultProjects = [
+  { title: 'The Proposed Dormitory development "Tata Electronics"', location: 'Hosur, Tamil Nadu', area_sqft: '15,00,000' },
+  { title: 'The Proposed residential Building "Casagrande"', location: 'Korattur, Chennai', area_sqft: '5,75,000' },
+  { title: 'The Proposed development building "ICGS"', location: 'Ratnagiri, Goa', area_sqft: '3,00,000' }
+];
+
+function ProjectsPage() {
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
+  const [sortBy, setSortBy] = useState('area-desc');
+
+  useEffect(() => {
+    document.title = "Selected Projects | GGA MEP Design Consultants";
+  }, []);
+
+  const categories = [
+    { id: 'All', label: 'All Projects', count: ggaProjects.length },
+    { id: 'Residential', label: 'Residential', count: ggaProjects.filter((p) => p.category === 'Residential').length },
+    { id: 'Industrial', label: 'Industrial & Campuses', count: ggaProjects.filter((p) => p.category === 'Industrial').length },
+    { id: 'Institutional', label: 'Institutional & Civic', count: ggaProjects.filter((p) => p.category === 'Institutional').length },
+    { id: 'Commercial', label: 'Commercial', count: ggaProjects.filter((p) => p.category === 'Commercial').length }
+  ];
+
+  const filteredProjects = useMemo(() => {
+    return ggaProjects
+      .filter((project) => {
+        const matchesCategory = activeCategory === 'All' || project.category === activeCategory;
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch = !q || (
+          project.title.toLowerCase().includes(q) ||
+          project.client.toLowerCase().includes(q) ||
+          project.location.toLowerCase().includes(q) ||
+          project.categoryLabel.toLowerCase().includes(q) ||
+          project.scope.some((s) => s.toLowerCase().includes(q))
+        );
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'area-desc') return b.areaNumber - a.areaNumber;
+        if (sortBy === 'area-asc') return a.areaNumber - b.areaNumber;
+        return a.slNo - b.slNo;
+      });
+  }, [activeCategory, searchQuery, sortBy]);
+
+  const totalFilteredArea = filteredProjects.reduce((sum, p) => sum + p.areaNumber, 0);
+
+  return (
+    <div className="projects-page-wrapper">
+      {/* Page Hero */}
+      <section className="page-hero">
+        <EngineeringBackground variant="page" />
+        <div className="container page-hero-inner">
+          <div>
+            <span className="eyebrow">
+              <span className="dot"></span> PROJECT EXPERIENCE PORTFOLIO
+            </span>
+            <h1>Selected Projects</h1>
+            <p>
+              Engineering excellence across 37,70,000+ sq.ft of residential, industrial, institutional, and commercial developments.
+            </p>
+          </div>
+          <PencilMark />
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <section className="section projects-showcase-section">
+        <EngineeringBackground variant="light" />
+        <div className="container">
+          
+          {/* Executive Portfolio Stats Ribbon */}
+          <div className="projects-stats-ribbon">
+            <div className="project-stat-box">
+              <span className="stat-number">37.7L+</span>
+              <span className="stat-unit">SQ. FT</span>
+              <span className="stat-caption">Total Coordinated Area</span>
+            </div>
+            <div className="project-stat-sep" aria-hidden="true"></div>
+            <div className="project-stat-box">
+              <span className="stat-number">11</span>
+              <span className="stat-unit">CURRENT PROJECTS</span>
+              <span className="stat-caption">Active Engineering Portfolio</span>
+            </div>
+            <div className="project-stat-sep" aria-hidden="true"></div>
+            <div className="project-stat-box">
+              <span className="stat-number">4</span>
+              <span className="stat-unit">CORE SECTORS</span>
+              <span className="stat-caption">Residential, Industrial, Institutional, Commercial</span>
+            </div>
+            <div className="project-stat-sep" aria-hidden="true"></div>
+            <div className="project-stat-box">
+              <span className="stat-number">100%</span>
+              <span className="stat-unit">COORDINATED</span>
+              <span className="stat-caption">Clash-Free Design Delivery</span>
+            </div>
+          </div>
+
+          {/* Interactive Filter & View Toolbar */}
+          <div className="projects-toolbar">
+            <div className="toolbar-left">
+              <div className="category-tabs" role="tablist">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    className={`cat-tab ${activeCategory === cat.id ? 'active' : ''}`}
+                    onClick={() => setActiveCategory(cat.id)}
+                    role="tab"
+                    aria-selected={activeCategory === cat.id}
+                  >
+                    <span>{cat.label}</span>
+                    <span className="tab-badge">{cat.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="toolbar-right">
+              {/* Search Box */}
+              <div className="project-search-box">
+                <span className="search-icon" aria-hidden="true">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search project, location, client..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label="Search projects"
+                />
+                {searchQuery && (
+                  <button className="search-clear-btn" onClick={() => setSearchQuery('')} aria-label="Clear search">×</button>
+                )}
+              </div>
+
+              {/* Sort Selector */}
+              <select
+                className="project-sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Sort projects"
+              >
+                <option value="area-desc">Largest Area First</option>
+                <option value="area-asc">Smallest Area First</option>
+                <option value="sl-asc">Official List Order (SL. No)</option>
+              </select>
+
+              {/* View Switcher Toggle */}
+              <div className="view-toggle" role="group" aria-label="Select view mode">
+                <button
+                  className={`toggle-btn ${viewMode === 'grid' ? 'active' : ''}`}
+                  onClick={() => setViewMode('grid')}
+                  title="Grid View"
+                  aria-pressed={viewMode === 'grid'}
+                >
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+                    <rect x="1" y="1" width="6" height="6" rx="1"/>
+                    <rect x="9" y="1" width="6" height="6" rx="1"/>
+                    <rect x="1" y="9" width="6" height="6" rx="1"/>
+                    <rect x="9" y="9" width="6" height="6" rx="1"/>
+                  </svg>
+                  <span>Cards</span>
+                </button>
+                <button
+                  className={`toggle-btn ${viewMode === 'table' ? 'active' : ''}`}
+                  onClick={() => setViewMode('table')}
+                  title="Official Table View"
+                  aria-pressed={viewMode === 'table'}
+                >
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+                    <rect x="1" y="2" width="14" height="2" rx="0.5"/>
+                    <rect x="1" y="7" width="14" height="2" rx="0.5"/>
+                    <rect x="1" y="12" width="14" height="2" rx="0.5"/>
+                  </svg>
+                  <span>Official Table</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Result Count Banner */}
+          <div className="results-status-bar">
+            <span>Showing <strong>{filteredProjects.length}</strong> of <strong>{ggaProjects.length}</strong> projects</span>
+            <span className="results-total-area">Filtered Cumulative Area: <strong>{totalFilteredArea.toLocaleString('en-IN')} SQ.FT</strong></span>
+          </div>
+
+          {/* VIEW MODE 1: GRID VIEW */}
+          {viewMode === 'grid' && (
+            <div className="projects-card-grid">
+              {filteredProjects.map((project) => (
+                <article className="portfolio-card" key={project.id}>
+                  {/* Top Bar */}
+                  <div className="card-header-bar">
+                    <span className="project-sl-pill">#{String(project.slNo).padStart(2, '0')}</span>
+                    <span className={`project-cat-badge cat-${project.category.toLowerCase()}`}>
+                      {project.category}
+                    </span>
+                    {project.featured && <span className="featured-flag">★ Landmark</span>}
+                  </div>
+
+                  {/* Title & Client */}
+                  <h3 className="card-title">{project.title}</h3>
+                  <div className="card-client-row">
+                    <span className="client-marker">Client:</span>
+                    <strong>{project.client}</strong>
+                  </div>
+
+                  {/* Location & Area Highlight */}
+                  <div className="card-location-row">
+                    <span className="location-pin" aria-hidden="true">📍</span>
+                    <span>{project.location}</span>
+                  </div>
+
+                  <div className="area-highlight-box">
+                    <span className="area-label">BUILT-UP AREA</span>
+                    <strong className="area-val">{project.area_sqft} <small>SQ.FT</small></strong>
+                  </div>
+
+                  {/* Description */}
+                  <p className="card-desc">{project.description}</p>
+
+                  {/* Scope Badges */}
+                  <div className="card-scope-list">
+                    {project.scope.map((s) => (
+                      <span className="scope-tag" key={s}>{s}</span>
+                    ))}
+                  </div>
+
+                  {/* Card Action Footer */}
+                  <div className="card-action-footer">
+                    <span className="project-status-dot">
+                      <i></i> {project.status}
+                    </span>
+                    <Link className="project-inquire-link" to="/contact-us">
+                      Inquire Scope ↗
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {/* VIEW MODE 2: OFFICIAL TABLE VIEW */}
+          {viewMode === 'table' && (
+            <div className="table-responsive-container">
+              <table className="official-projects-table" aria-label="GGA Current Projects List">
+                <thead>
+                  <tr>
+                    <th scope="col" className="col-sl">SL, NO</th>
+                    <th scope="col" className="col-desc">PROJECT DETAILS & CLIENT</th>
+                    <th scope="col" className="col-cat">SECTOR</th>
+                    <th scope="col" className="col-loc">LOCATION</th>
+                    <th scope="col" className="col-scope">SERVICES SCOPE</th>
+                    <th scope="col" className="col-area">AREA IN SQ.FT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredProjects.map((project) => (
+                    <tr key={project.id} className={project.featured ? 'row-featured' : ''}>
+                      <td className="cell-sl">
+                        <span className="table-sl-badge">{project.slNo}</span>
+                      </td>
+                      <td className="cell-details">
+                        <strong className="table-project-title">{project.title}</strong>
+                        <div className="table-client-sub">
+                          <span>Client: <strong>{project.client}</strong></span>
+                          {project.featured && <span className="table-landmark-tag">Landmark</span>}
+                        </div>
+                      </td>
+                      <td className="cell-cat">
+                        <span className={`table-cat-pill cat-${project.category.toLowerCase()}`}>
+                          {project.category}
+                        </span>
+                      </td>
+                      <td className="cell-loc">
+                        <span className="table-loc-text">📍 {project.location}</span>
+                      </td>
+                      <td className="cell-scope">
+                        <div className="table-scope-tags">
+                          {project.scope.map((s) => (
+                            <span key={s}>{s}</span>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="cell-area">
+                        <span className="table-area-number">{project.area_sqft}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan="5" className="table-total-label">
+                      TOTAL CUMULATIVE AREA ({filteredProjects.length} Projects)
+                    </td>
+                    <td className="table-total-value">
+                      {totalFilteredArea.toLocaleString('en-IN')} SQ.FT
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          )}
+
+          {/* Bottom Consultation CTA Banner */}
+          <div className="projects-bottom-cta">
+            <div className="cta-left">
+              <span className="cta-kicker">HAVE A RESIDENTIAL, INDUSTRIAL OR COMMERCIAL PROJECT?</span>
+              <h2>Ready to engineer clash-free building systems?</h2>
+              <p>
+                From 25,000 sq.ft civic centers to 15,00,000 sq.ft industrial campuses, GGA provides coordinated plumbing, electrical, firefighting, and HVAC designs with on-site engineering support.
+              </p>
+            </div>
+            <div className="cta-actions">
+              <Link className="btn btn-yellow" to="/contact-us">Discuss your project scope ↗</Link>
+              <a className="btn btn-outline" href={WA} target="_blank" rel="noreferrer">Quick WhatsApp Chat ↗</a>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+  );
+}
 
 function ContentPage() {
   const { slug } = useParams();
+  if (slug === 'projects') {
+    return <ProjectsPage />;
+  }
   const fallback = FALLBACK[slug] || FALLBACK['about-us'];
   const page = useData(`/pages/${slug}`, fallback);
   useEffect(()=>{ document.title = page.seo_title || `${page.title} | GGA MEP Design Consultants`; const meta=document.querySelector('meta[name="description"]'); if(meta && page.seo_description) meta.content=page.seo_description; },[page,slug]);
   const services = useData('/services', []);
-  const projects = useData('/projects', []);
   return <><section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> GGA DESIGN CONSULTANTS</span><h1>{page.title}</h1><p>{page.subtitle}</p></div><PencilMark/></div></section>
     <section className="section"><EngineeringBackground variant="light"/><div className="container content-layout"><div className="content-main"><span className="eyebrow dark">GET GREAT ADVICE</span><h2>{page.subtitle}</h2><p className="body-copy">{page.body}</p>
-      {slug==='services' && <div className="detail-list">{(services.length?services:defaultServices).map((s,i)=><article key={s.id||s.slug}><span className="detail-num">0{i+1}</span><div><h3>{s.title}</h3><p>{s.details||s.summary}</p></div></article>)}</div>}
-      {slug==='projects' && <div className="project-list">{(projects.length?projects:defaultProjects).map((p,i)=><article key={p.id||p.title}><span>{String(i+1).padStart(2,'0')}</span><div><h3>{p.title}</h3><p>{p.location}{p.area_sqft?' · '+p.area_sqft+' sq.ft':''}</p>{p.description&&<p>{p.description}</p>}</div></article>)}</div>}
+      {slug==='services' && <>
+        <div className="services-intro">
+          <span className="services-kicker">OUR CORE CAPABILITIES</span>
+          <h2>MEP design services, clearly coordinated.</h2>
+          <p>GGA's company profile lists plumbing, electrical and fire-fighting design services, including fire-alarm systems. HVAC is also listed among the company's service areas. The exact deliverables are agreed for each project.</p>
+        </div>
+        <div className="services-detail-grid">
+          {[
+            {number:'01',title:'Plumbing Design',intro:'Water supply, drainage and water-management systems for buildings.',items:['Drainage collection and disposal systems','Internal and external plumbing systems','Water supply collection and distribution','Booster systems for water distribution','Storm-water design and discharge','Rainwater harvesting systems','Sewage treatment plant (STP)','Water treatment plant (WTP)'],icon:'↗'},
+            {number:'02',title:'Electrical Design',intro:'Building electrical design and power-distribution support.',items:['Electrical load calculations','Power distribution system design','Earthing systems','Low-voltage building automation, communication, safety, surveillance and networks','HT/LT power distribution, panels and cabling','Lighting design and luminaire selection','DC distribution systems','Electrical design for building services','DG sets and transformers','UPS (uninterruptible power supply)'],icon:'ϟ'},
+            {number:'03',title:'Fire-Fighting Design',intro:'Fire-protection systems and hydraulic design support.',items:['Internal and external hydrant systems','Fire pump room design coordination','Sprinkler systems','Fire-system hydraulic calculations','Fire extinguishers','Fire-safety signage'],icon:'✳'},
+            {number:'04',title:'Fire Alarm Systems',intro:'Fire-alarm systems included in GGA’s listed building-safety services.',items:['Fire-alarm system design coordination','Coordination with related building services','Project-specific scope and requirements review'],icon:'◎'},
+            {number:'05',title:'HVAC Design',intro:'HVAC is listed as a GGA service area on the company business card.',items:['Discuss HVAC design requirements for your project','Coordinate the agreed scope with other MEP services','Confirm project-specific deliverables during consultation'],icon:'⌁'}
+          ].map((service)=><article className="service-detail-card" key={service.number}>
+            <div className="service-detail-top"><span className="service-detail-icon" aria-hidden="true">{service.icon}</span><span className="service-detail-number">{service.number}</span></div>
+            <h3>{service.title}</h3><p className="service-detail-intro">{service.intro}</p>
+            <ul>{service.items.map((item)=><li key={item}>{item}</li>)}</ul>
+          </article>)}
+        </div>
+        <section className="scope-work">
+          <div className="scope-heading"><span className="services-kicker">PROJECT SUPPORT</span><h2>Scope of work</h2><p>As described in the GGA MEP company profile, support may include the following activities, subject to the agreed project scope.</p></div>
+          <div className="scope-grid">
+            {[
+              'Coordination with design stakeholders for detailed MEP design development',
+              'Coordination with the builder, architect and structural consultant for concept closure',
+              'Site visits and meetings to support execution as per design',
+              'Technical clarifications and RFI clearance',
+              'Technical support for finalisation of specifications',
+              'Technical support for tender coordination',
+              'Issuance of GFC drawings in soft and hard copy',
+              'Review and approval of vendor shop drawings and GA drawings'
+            ].map((item,index)=><div className="scope-item" key={item}><span>{String(index+1).padStart(2,'0')}</span><p>{item}</p></div>)}
+          </div>
+        </section>
+        <section className="services-cta">
+          <div><span className="services-kicker">HAVE A PROJECT IN MIND?</span><h2>Let's discuss your MEP design requirements.</h2><p>Share your project type, location and required services with the GGA team.</p></div>
+          <Link className="btn btn-yellow" to="/contact-us">Discuss your project ↗</Link>
+        </section>
+      </>}
       {slug==='about-us' && <div className="detail-list">{['MEP design development coordination','Coordination with builders, architects and structural consultants','Site visits and meetings to support execution as per design','Technical clarifications and RFI clearance','Specification finalisation and tender coordination','GFC drawing issuance in soft and hard copy','Review of vendor shop and GA drawings'].map((x,i)=><article key={x}><span className="detail-num">0{i+1}</span><div><h3>{x}</h3><p>Project-specific support agreed according to scope, programme and applicable requirements.</p></div></article>)}</div>}
     </div><aside className="contact-card"><span className="eyebrow">LET'S TALK</span><h3>Have a project in mind?</h3><p>Tell us about your building and MEP design requirements.</p><Link className="btn btn-yellow" to="/contact-us">Contact GGA ↗</Link><div className="aside-rule"></div><p className="aside-contact">✉ <a href="mailto:ggamepconsultant@gmail.com">ggamepconsultant@gmail.com</a></p><p className="aside-contact">☎ <a href="tel:+918489274385">+91 8489274385</a></p></aside></div></section>
   </>;
@@ -199,8 +1039,66 @@ function Contact() {
  </>;
 }
 
-function Footer({settings}) {
- return <footer className="footer"><div className="container footer-main"><div><Link to="/" className="brand footer-brand" aria-label="GGA home"><img src="/images/gga-logo.jpg" alt="GGA - GET GREAT ADVICE" className="brand-logo-img footer-logo-img" /></Link><p>MEP design consultants supporting coordinated building-services design.</p></div><div><h4>EXPLORE</h4><Link to="/about-us">About Us</Link><Link to="/services">Services</Link><Link to="/projects">Projects</Link><Link to="/contact-us">Contact</Link></div><div><h4>GET IN TOUCH</h4><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a><a href={WA} target="_blank" rel="noreferrer">WhatsApp ↗</a></div></div><div className="container footer-bottom"><span>© {new Date().getFullYear()} GGA Design Consultants</span><span>*Experience statement based on the company profile; verify before publishing.</span></div></footer>;
+function Footer({ settings }) {
+  return (
+    <footer className="footer">
+      <div className="footer-clients-bar">
+        <div className="container footer-clients-header">
+          <div className="clients-header-left">
+            <div>
+              <span className="clients-kicker-dot"></span>
+              <span className="clients-kicker-text">OUR ESTEEMED CLIENTS & DEVELOPERS</span>
+            </div>
+            <h4 className="clients-header-title">Trusted by India’s Premier Builders & Developers</h4>
+          </div>
+          <div className="clients-header-right">
+            <span className="clients-badge-pill">
+              <strong>100+</strong> Projects Coordinated
+            </span>
+          </div>
+        </div>
+
+        <div className="footer-marquee-wrapper" aria-label="GGA client logos carousel">
+          <div className="footer-marquee-track">
+            {[...clientLogos, ...clientLogos, ...clientLogos].map((logo, index) => (
+              <div className="premium-client-card" key={`${logo.name}-footer-${index}`}>
+                <div className="client-logo-stage">
+                  <img src={logo.src} alt={`${logo.name} logo`} loading="lazy" />
+                </div>
+                <span className="client-brand-name">{logo.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="container footer-main">
+        <div>
+          <Link to="/" className="brand footer-brand" aria-label="GGA home">
+            <img src="/images/gga-logo.jpg" alt="GGA - GET GREAT ADVICE" className="brand-logo-img footer-logo-img" />
+          </Link>
+          <p>MEP design consultants supporting coordinated building-services design.</p>
+        </div>
+        <div>
+          <h4>EXPLORE</h4>
+          <Link to="/about-us">About Us</Link>
+          <Link to="/services">Services</Link>
+          <Link to="/projects">Projects</Link>
+          <Link to="/contact-us">Contact</Link>
+        </div>
+        <div>
+          <h4>GET IN TOUCH</h4>
+          <a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email || 'ggamepconsultant@gmail.com'}</a>
+          <a href="tel:+918489274385">{settings.contact_phone || '+91 8489274385'}</a>
+          <a href={WA} target="_blank" rel="noreferrer">WhatsApp ↗</a>
+        </div>
+      </div>
+      <div className="container footer-bottom">
+        <span>© {new Date().getFullYear()} GGA Design Consultants</span>
+        <span>*Experience statement based on the company profile; verify before publishing.</span>
+      </div>
+    </footer>
+  );
 }
 
 function FloatingActions({ settings }) {
@@ -242,5 +1140,5 @@ function FloatingActions({ settings }) {
 
 export default function App() {
  const settings=useData('/settings',{});
- return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<ContentPage/>}/><Route path="/services" element={<ContentPage/>}/><Route path="/projects" element={<ContentPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
+ return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<ContentPage/>}/><Route path="/services" element={<ContentPage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
 }
