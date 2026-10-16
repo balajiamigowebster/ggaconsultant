@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Route, Routes, useParams, useSearchParams } from 'react-router-dom';
+import ToptoScroll from './ToptoScroll.jsx';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+import API from './config.js';
 const WA = 'https://wa.me/918489274385?text=' + encodeURIComponent('Hello GGA, I would like to discuss an MEP design requirement.');
 const FALLBACK = {
   'home': { title:'GGA MEP Design Consultants', subtitle:'Thoughtful MEP design for buildings that work better.', body:'Coordinated plumbing, electrical, firefighting and building-services design support for projects across India and the Gulf.' },
@@ -150,7 +151,41 @@ function Home() {
       })}</div>
     </div></section>
     <section className="dark-band"><EngineeringBackground variant="band"/><div className="container band-inner"><div><span className="eyebrow">HOW WE SUPPORT YOU</span><h2>Clear coordination.<br/><em>Confident execution.</em></h2></div><Link className="btn btn-yellow" to="/about-us">Discover GGA <span>↗</span></Link></div></section>
-    <section className="section projects-preview"><EngineeringBackground variant="light"/><div className="container"><div className="section-heading"><div><span className="eyebrow dark">PROJECT EXPERIENCE</span><h2>Many building types.<br/><em>One coordinated approach.</em></h2></div><Link className="text-link" to="/projects">View project list ↗</Link></div><div className="project-grid">{(projects.length?projects:defaultProjects).slice(0,3).map((p,i)=><article className="project-card" key={p.id||p.title}><div className={`project-art project-art-${i+1}`}><span>{p.location||'PROJECT EXPERIENCE'}</span><div className="building-shape"><i></i><i></i><i></i><i></i></div></div><div className="project-info"><h3>{p.title}</h3><p>{p.location}{p.area_sqft?' · '+p.area_sqft+' sq.ft':''}</p></div></article>)}</div></div></section>
+    <section className="section projects-preview">
+      <EngineeringBackground variant="light"/>
+      <div className="container">
+        <div className="section-heading">
+          <div>
+            <span className="eyebrow dark">PROJECT EXPERIENCE</span>
+            <h2>Many building types.<br/><em>One coordinated approach.</em></h2>
+          </div>
+          <Link className="text-link" to="/projects">View project list ↗</Link>
+        </div>
+        <div className="project-grid">
+          {(projects.length ? projects : defaultProjects).slice(0, 3).map((p, i) => {
+            const projectImg = p.image || `/images/project-${i + 1}.jpeg`;
+            return (
+              <article className="project-card" key={p.id || p.title}>
+                <div className={`project-art project-art-${i + 1}`}>
+                  <span>{p.location || 'PROJECT EXPERIENCE'}</span>
+                  <img
+                    src={projectImg}
+                    alt={p.title}
+                    className="project-cover-img"
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                  <div className="project-img-overlay"></div>
+                </div>
+                <div className="project-info">
+                  <h3>{p.title}</h3>
+                  <p>{p.location}{p.area_sqft ? ' · ' + p.area_sqft + ' sq.ft' : ''}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
   </>;
 }
 
@@ -551,10 +586,12 @@ function ProjectsPage() {
                     <span>{project.location}</span>
                   </div>
 
+                  {/* Built-up Area (Commented out)
                   <div className="area-highlight-box">
                     <span className="area-label">BUILT-UP AREA</span>
                     <strong className="area-val">{project.area_sqft} <small>SQ.FT</small></strong>
                   </div>
+                  */}
 
                   {/* Description */}
                   <p className="card-desc">{project.description}</p>
@@ -1763,18 +1800,97 @@ function ContentPage() {
 }
 
 function Contact() {
- const settings=useData('/settings',{});
- const [form,setForm]=useState({name:'',email:'',phone:'',message:''});
- const [status,setStatus]=useState('');
- const update=e=>setForm({...form,[e.target.name]:e.target.value});
- async function submit(e){e.preventDefault();setStatus('Sending...');try{const r=await fetch(`${API}/contact`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Could not send');setStatus(d.message);setForm({name:'',email:'',phone:'',message:''});}catch(err){setStatus(err.message+' (Check that the API is running.)');}}
- const officeAddress = settings.office_address || 'Flat No B, Vallabari Apartment, Vallal Pari Street, Ram Nagar, Madipakkam, Chennai 600091';
- const mapQuery = encodeURIComponent(officeAddress);
+  const settings = useData('/settings', {});
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const [status, setStatus] = useState({ type: '', text: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
- return <>
-  <section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> START A CONVERSATION</span><h1>Contact GGA</h1><p>Tell us about your project. We’ll get back to you.</p></div><PencilMark/></div></section>
-  <section className="section"><EngineeringBackground variant="light"/><div className="container contact-layout"><div className="contact-details"><span className="eyebrow dark">CONTACT DETAILS</span><h2>Let's discuss<br/><em>your next project.</em></h2><p>Reach out to discuss MEP design scope, coordination, drawings or technical support.</p><div className="contact-detail"><span>EMAIL</span><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a></div><div className="contact-detail"><span>PHONE</span><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a></div><div className="contact-detail"><span>OFFICE</span><p>{officeAddress}</p></div><a className="btn btn-dark" href={WA} target="_blank" rel="noreferrer">Message us on WhatsApp ↗</a></div>
-  <form className="contact-form" onSubmit={submit}><h3>Send an enquiry</h3><p>Fields marked * are required.</p><label>Full name *<input name="name" value={form.name} onChange={update} required maxLength="120" placeholder="Your name"/></label><label>Email address *<input name="email" type="email" value={form.email} onChange={update} required maxLength="254" placeholder="you@example.com"/></label><label>Phone number<input name="phone" value={form.phone} onChange={update} placeholder="+91" /></label><label>How can we help? *<textarea name="message" value={form.message} onChange={update} required maxLength="5000" rows="5" placeholder="Tell us a little about your project..."/></label><button className="btn btn-yellow" type="submit">Send enquiry ↗</button>{status&&<p className="form-status" role="status">{status}</p>}</form></div></section>
+  const update = e => setForm({ ...form, [e.target.name]: e.target.value });
+
+  async function submit(e) {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setStatus({ type: 'loading', text: 'Securing your enquiry...' });
+    try {
+      const r = await fetch(`${API}/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Could not send enquiry');
+      setStatus({
+        type: 'success',
+        text: d.message || 'Thank you! Your enquiry has been received and saved.'
+      });
+      setForm({ name: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      setStatus({
+        type: 'error',
+        text: err.message + ' (Check that the backend is running)'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  const officeAddress = settings.office_address || 'Flat No B, Vallabari Apartment, Vallal Pari Street, Ram Nagar, Madipakkam, Chennai 600091';
+  const mapQuery = encodeURIComponent(officeAddress);
+
+  return <>
+    <section className="page-hero"><EngineeringBackground variant="page"/><div className="container page-hero-inner"><div><span className="eyebrow"><span className="dot"></span> START A CONVERSATION</span><h1>Contact GGA</h1><p>Tell us about your project. We’ll get back to you.</p></div><PencilMark/></div></section>
+    <section className="section"><EngineeringBackground variant="light"/><div className="container contact-layout"><div className="contact-details"><span className="eyebrow dark">CONTACT DETAILS</span><h2>Let's discuss<br/><em>your next project.</em></h2><p>Reach out to discuss MEP design scope, coordination, drawings or technical support.</p><div className="contact-detail"><span>EMAIL</span><a href="mailto:ggamepconsultant@gmail.com">{settings.contact_email||'ggamepconsultant@gmail.com'}</a></div><div className="contact-detail"><span>PHONE</span><a href="tel:+918489274385">{settings.contact_phone||'+91 8489274385'}</a></div><div className="contact-detail"><span>OFFICE</span><p>{officeAddress}</p></div><a className="btn btn-dark" href={WA} target="_blank" rel="noreferrer">Message us on WhatsApp ↗</a></div>
+    <form className="contact-form" onSubmit={submit}>
+      <h3>Send an enquiry</h3>
+      <p>Fields marked * are required.</p>
+      <label>Full name *<input name="name" value={form.name} onChange={update} required maxLength="120" placeholder="Your name"/></label>
+      <label>Email address *<input name="email" type="email" value={form.email} onChange={update} required maxLength="254" placeholder="you@example.com"/></label>
+      <label>Phone number<input name="phone" value={form.phone} onChange={update} placeholder="+91" /></label>
+      <label>How can we help? *<textarea name="message" value={form.message} onChange={update} required maxLength="5000" rows="5" placeholder="Tell us a little about your project..."/></label>
+      <button className="btn btn-yellow" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Sending Enquiry...' : 'Send enquiry ↗'}
+      </button>
+
+      {status.type === 'success' && (
+        <div className="premium-status-banner success-banner" role="alert">
+          <div className="banner-icon-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="banner-svg-check">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <div className="banner-content">
+            <strong>Enquiry Received Successfully!</strong>
+            <p>{status.text}</p>
+            <span className="banner-note">Our engineering team will review your requirements and reach out shortly.</span>
+          </div>
+        </div>
+      )}
+
+      {status.type === 'error' && (
+        <div className="premium-status-banner error-banner" role="alert">
+          <div className="banner-icon-ring error-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="banner-svg-cross">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </div>
+          <div className="banner-content">
+            <strong>Unable to Send Enquiry</strong>
+            <p>{status.text}</p>
+          </div>
+        </div>
+      )}
+
+      {status.type === 'loading' && (
+        <div className="premium-status-banner loading-banner">
+          <div className="banner-spinner"></div>
+          <div className="banner-content">
+            <span>{status.text}</span>
+          </div>
+        </div>
+      )}
+    </form>
+    </div></section>
   <section className="map-section">
     <div className="container">
       <div className="map-card">
@@ -1904,6 +2020,22 @@ function FloatingActions({ settings }) {
 }
 
 export default function App() {
- const settings=useData('/settings',{});
- return <><Header settings={settings}/><main><Routes><Route path="/" element={<Home/>}/><Route path="/about-us" element={<AboutPage/>}/><Route path="/services" element={<ServicesPage/>}/><Route path="/projects" element={<ProjectsPage/>}/><Route path="/contact-us" element={<Contact/>}/></Routes></main><Footer settings={settings}/><FloatingActions settings={settings}/></>;
+  const settings = useData('/settings', {});
+  return (
+    <>
+      <ToptoScroll />
+      <Header settings={settings} />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<AboutPage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/contact-us" element={<Contact />} />
+        </Routes>
+      </main>
+      <Footer settings={settings} />
+      <FloatingActions settings={settings} />
+    </>
+  );
 }
