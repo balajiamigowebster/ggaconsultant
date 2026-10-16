@@ -3379,19 +3379,19 @@ html {
 
 .exp-years-num {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 68px;
+  font-size: 88px;
   font-weight: 800;
-  line-height: 1;
+  line-height: 0.9;
   color: #ffdf24;
-  letter-spacing: -1.5px;
-  text-shadow: 0 0 24px rgba(255, 223, 36, 0.45);
+  letter-spacing: -2px;
+  text-shadow: 0 0 28px rgba(255, 223, 36, 0.45);
   display: inline-flex;
   align-items: baseline;
   flex-shrink: 0;
 }
 
 .exp-plus {
-  font-size: 38px;
+  font-size: 44px;
   font-weight: 700;
   color: #ffffff;
   margin-left: 2px;
@@ -3421,7 +3421,7 @@ html {
 }
 
 .exp-sub {
-  font-size: 11px;
+  font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 1.4px;
   color: #94a3b8;
@@ -3432,7 +3432,7 @@ html {
 
 .exp-main {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.25;

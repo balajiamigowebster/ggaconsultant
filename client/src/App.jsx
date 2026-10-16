@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, Route, Routes, useParams, useSearchParams } from 'react-router-dom';
 import ToptoScroll from './ToptoScroll.jsx';
 
@@ -1427,31 +1427,50 @@ function ServicesPage() {
 
 function AnimatedCounter({ end = 15, duration = 1800, suffix = '+' }) {
   const [count, setCount] = useState(0);
+  const elementRef = useRef(null);
+  const hasAnimatedRef = useRef(false);
 
   useEffect(() => {
-    let startTimestamp = null;
-    let animationFrameId;
+    const el = elementRef.current;
+    if (!el) return;
 
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      // Ease out cubic
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(easeOut * end));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !hasAnimatedRef.current) {
+          hasAnimatedRef.current = true;
+          let startTimestamp = null;
+          let animationFrameId;
 
-      if (progress < 1) {
-        animationFrameId = window.requestAnimationFrame(step);
-      } else {
-        setCount(end);
-      }
+          const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            // Ease out cubic
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(easeOut * end));
+
+            if (progress < 1) {
+              animationFrameId = window.requestAnimationFrame(step);
+            } else {
+              setCount(end);
+            }
+          };
+
+          animationFrameId = window.requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
     };
-
-    animationFrameId = window.requestAnimationFrame(step);
-    return () => window.cancelAnimationFrame(animationFrameId);
   }, [end, duration]);
 
   return (
-    <span className="exp-years-num animate-pulse-glow">
+    <span ref={elementRef} className="exp-years-num animate-pulse-glow">
       {count}<span className="exp-plus">{suffix}</span>
     </span>
   );
