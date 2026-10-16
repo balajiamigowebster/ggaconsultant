@@ -49,8 +49,41 @@ apiRouter.get('/settings', (req, res) => {
   });
 });
 
+const pageContentMap = {
+  home: {
+    title: 'GGA MEP Design Consultants',
+    subtitle: 'Thoughtful MEP design for buildings that work better.',
+    body: 'Coordinated plumbing, electrical, firefighting and building-services design support for projects across India and the Gulf.'
+  },
+  'about-us': {
+    title: 'About GGA MEP Design Consultants',
+    subtitle: 'Designing Smarter Buildings. Engineering Safer Futures.',
+    body: 'GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, Firefighting, and Fire Alarm System Design.'
+  },
+  services: {
+    title: 'MEP Design Services',
+    subtitle: 'Integrated building-services design support.',
+    body: 'Explore plumbing, electrical, firefighting, fire alarm and HVAC service areas.'
+  },
+  projects: {
+    title: 'Selected Projects',
+    subtitle: 'Experience across diverse building types.',
+    body: 'The company profile lists residential, commercial, institutional, industrial and public-building projects across multiple locations.'
+  },
+  'contact-us': {
+    title: 'Contact GGA',
+    subtitle: 'Discuss your next MEP design requirement.',
+    body: 'Contact us to discuss project scope, design coordination, technical support and documentation requirements.'
+  }
+};
+
 apiRouter.get('/pages/:slug', (req, res) => {
-  res.json({ status: 'ok', slug: req.params.slug });
+  const content = pageContentMap[req.params.slug] || {
+    title: 'GGA MEP Design Consultants',
+    subtitle: 'Thoughtful MEP design for buildings that work better.',
+    body: 'Coordinated plumbing, electrical, firefighting and building-services design support for projects across India and the Gulf.'
+  };
+  res.json({ status: 'ok', slug: req.params.slug, ...content });
 });
 
 apiRouter.get('/services', (req, res) => {

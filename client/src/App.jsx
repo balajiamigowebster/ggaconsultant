@@ -103,7 +103,26 @@ function Header({ settings }) {
 
 function useData(path, fallback) {
   const [data, setData] = useState(fallback);
-  useEffect(() => { fetch(`${API}${path}`).then(r => { if (!r.ok) throw new Error('API'); return r.json(); }).then(setData).catch(()=>{}); }, [path]);
+  useEffect(() => {
+    fetch(`${API}${path}`)
+      .then((r) => {
+        if (!r.ok) throw new Error('API');
+        return r.json();
+      })
+      .then((incoming) => {
+        if (incoming && typeof incoming === 'object' && !Array.isArray(incoming)) {
+          // If response is missing title or critical fields, keep fallback
+          if (!incoming.title && fallback && fallback.title) {
+            setData((prev) => ({ ...fallback, ...incoming, title: fallback.title, subtitle: fallback.subtitle, body: fallback.body }));
+          } else {
+            setData(incoming);
+          }
+        } else if (Array.isArray(incoming) && incoming.length > 0) {
+          setData(incoming);
+        }
+      })
+      .catch(() => {});
+  }, [path]);
   return data;
 }
 
@@ -130,7 +149,7 @@ function Home() {
       <div className="hero-copy"><span className="eyebrow"><span className="dot"></span> MEP DESIGN CONSULTANTS</span>
         <h1>{page.title}<em>.</em></h1><p className="hero-sub">{page.subtitle}</p><p className="hero-body">{page.body}</p>
         <div className="hero-actions"><Link className="btn btn-yellow" to="/services">Explore our services <span>↗</span></Link><Link className="btn btn-outline" to="/contact-us">Discuss a project</Link></div>
-        <div className="hero-stats"><div><strong>10+</strong><span>Years of experience*</span></div><div><strong>MEP</strong><span>Integrated design support</span></div><div><strong>India + Gulf</strong><span>Project experience*</span></div></div>
+        <div className="hero-stats"><div><strong>15+</strong><span>Years of experience*</span></div><div><strong>MEP</strong><span>Integrated design support</span></div><div><strong>India + Gulf</strong><span>Project experience*</span></div></div>
       </div>
       <div className="hero-art"><div className="art-ring ring-one"></div><div className="art-ring ring-two"></div><div className="blueprint"><span>BUILDING SYSTEMS</span><div className="blueprint-building"><i></i><i></i><i></i><i></i><i></i></div><div className="blueprint-lines"></div></div><PencilMark/><div className="floating-label label-top">DESIGN <b>+</b> COORDINATION</div><div className="floating-label label-bottom"><span>✦</span> Thoughtful by design</div></div>
     </div><div className="hero-bottom-line"></div></section>
