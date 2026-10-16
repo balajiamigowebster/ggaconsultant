@@ -1598,7 +1598,74 @@ function AboutPage() {
             </aside>
           </div>
 
-          {/* Vision & Mission Cards */}
+          {/* 15+ Years of Experience Engineering Showcase */}
+          <section className="about-experience-section">
+            <div className="experience-showcase-card">
+              <div className="exp-blueprint-decor" aria-hidden="true"></div>
+              
+              <div className="exp-left-col">
+                <div className="exp-years-badge">
+                  <span className="exp-years-num animate-pulse-glow">15<span className="exp-plus">+</span></span>
+                  <div className="exp-years-label">
+                    <span className="exp-sub">YEARS OF PROVEN</span>
+                    <strong className="exp-main">Engineering Excellence</strong>
+                  </div>
+                </div>
+
+                <div className="exp-stats-mini-grid">
+                  <div className="exp-mini-stat">
+                    <span className="mini-stat-num">100+</span>
+                    <span className="mini-stat-label">Coordinated Projects</span>
+                  </div>
+                  <div className="exp-mini-stat">
+                    <span className="mini-stat-num">100%</span>
+                    <span className="mini-stat-label">Statutory Compliance</span>
+                  </div>
+                  <div className="exp-mini-stat">
+                    <span className="mini-stat-num">Zero</span>
+                    <span className="mini-stat-label">Site Clash Target</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="exp-right-col">
+                <div className="exp-badge-pill">
+                  <span className="badge-pulse-dot"></span>
+                  SINCE 2009 · INDUSTRY LEADERSHIP
+                </div>
+                <h3 className="exp-heading">
+                  A Decade &amp; a Half of Precision MEP Design &amp; Value Engineering
+                </h3>
+                <p className="exp-description">
+                  For over <strong>15 years</strong>, GGA MEP Design Consultants has been at the forefront of building services engineering. Our senior consulting engineers bring more than a decade and a half of dedicated expertise in designing complex, high-demand building systems for landmark residential communities, corporate IT towers, state-of-the-art hospitals, and expansive industrial campuses.
+                </p>
+
+                <div className="exp-milestone-features">
+                  <div className="exp-feature-item">
+                    <div className="feature-icon-box">📐</div>
+                    <div>
+                      <h4>Mathematical &amp; Code Precision</h4>
+                      <p>15+ years refining hydraulic calculations, electrical demand diversity, and NFPA life-safety models.</p>
+                    </div>
+                  </div>
+                  <div className="exp-feature-item">
+                    <div className="feature-icon-box">🤝</div>
+                    <div>
+                      <h4>Trusted by Tier-1 Developers</h4>
+                      <p>Longstanding design coordination with India’s leading builders, architects, and structural consultants.</p>
+                    </div>
+                  </div>
+                  <div className="exp-feature-item">
+                    <div className="feature-icon-box">💡</div>
+                    <div>
+                      <h4>Life-Cycle Value Engineering</h4>
+                      <p>Designs engineered to minimize capital expenditure and reduce operational energy costs across decades.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
           <section className="about-vision-mission-section">
             <div className="section-header-centered">
               <span className="services-kicker">OUR GUIDING PRINCIPLES</span>

@@ -3307,3 +3307,317 @@ html {
     height: 42px;
   }
 }
+
+/* ==========================================================================
+   15+ YEARS EXPERIENCE SHOWCASE - ABOUT PAGE
+   ========================================================================== */
+.about-experience-section {
+  margin: 56px 0 20px;
+}
+
+.experience-showcase-card {
+  position: relative;
+  background: linear-gradient(135deg, #061a36 0%, #09264e 60%, #051429 100%);
+  border: 1px solid rgba(255, 223, 36, 0.25);
+  border-radius: 12px;
+  padding: 50px 48px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 52px;
+  box-shadow: 0 20px 50px rgba(6, 26, 54, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  color: #ffffff;
+}
+
+/* Engineering Blueprint Background Grid Effect */
+.exp-blueprint-decor {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.experience-showcase-card::after {
+  content: "";
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  border: 1.5px dashed rgba(255, 223, 36, 0.2);
+  border-radius: 50%;
+  right: -80px;
+  bottom: -90px;
+  pointer-events: none;
+  animation: rotateCompass 30s linear infinite;
+}
+
+@keyframes rotateCompass {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Left Column - Years Badge & Mini Stats */
+.exp-left-col {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  padding-right: 44px;
+}
+
+.exp-years-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.exp-years-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 92px;
+  font-weight: 800;
+  line-height: 0.9;
+  color: #ffdf24;
+  letter-spacing: -2px;
+  text-shadow: 0 0 28px rgba(255, 223, 36, 0.45);
+  display: inline-block;
+  position: relative;
+}
+
+.exp-plus {
+  font-size: 48px;
+  font-weight: 700;
+  color: #ffffff;
+  vertical-align: super;
+  margin-left: 2px;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(255, 223, 36, 0.4), 0 0 35px rgba(255, 223, 36, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 32px rgba(255, 223, 36, 0.75), 0 0 55px rgba(255, 223, 36, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3.5s ease-in-out infinite;
+}
+
+.exp-years-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.exp-sub {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.exp-main {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.exp-stats-mini-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.exp-mini-stat {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: 3.5px solid #ffdf24;
+  border-radius: 6px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.25s ease;
+}
+
+.exp-mini-stat:hover {
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateX(4px);
+  border-color: rgba(255, 223, 36, 0.4);
+}
+
+.mini-stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffdf24;
+}
+
+.mini-stat-label {
+  font-size: 12.5px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Right Column - Content & Milestone Features */
+.exp-right-col {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.exp-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 223, 36, 0.14);
+  border: 1px solid rgba(255, 223, 36, 0.35);
+  color: #ffdf24;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  width: fit-content;
+  margin-bottom: 16px;
+}
+
+.badge-pulse-dot {
+  width: 7px;
+  height: 7px;
+  background: #ffdf24;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ffdf24;
+  animation: pulseDot 1.8s infinite;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.exp-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 28px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 14px 0;
+}
+
+.exp-description {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #e2e8f0;
+  margin: 0 0 28px 0;
+}
+
+.exp-description strong {
+  color: #ffdf24;
+  font-weight: 700;
+}
+
+/* Feature Items with Hover Animations */
+.exp-milestone-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.exp-feature-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.exp-feature-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 223, 36, 0.35);
+  transform: translateY(-4px);
+}
+
+.feature-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: rgba(255, 223, 36, 0.16);
+  border: 1px solid rgba(255, 223, 36, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.exp-feature-item h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.exp-feature-item p {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .experience-showcase-card {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 38px 30px;
+  }
+  
+  .exp-left-col {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-right: 0;
+    padding-bottom: 32px;
+  }
+  
+  .exp-stats-mini-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .exp-milestone-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .exp-years-num {
+    font-size: 72px;
+  }
+  
+  .exp-heading {
+    font-size: 22px;
+  }
+  
+  .exp-stats-mini-grid {
+    grid-template-columns: 1fr;
+  }
+}
