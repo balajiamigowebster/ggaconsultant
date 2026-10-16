@@ -18,7 +18,6 @@ const allowedOrigins = [
 // Middleware
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, postman)
     if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       return callback(null, true);
     }
@@ -28,16 +27,51 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health Check route
-app.get('/api/health', (req, res) => {
+// Setup API router supporting all endpoints requested by frontend
+const apiRouter = express.Router();
+
+apiRouter.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'GGA MEP Backend API is running', timestamp: new Date() });
 });
 
-// API Routes
-app.use('/api/contact', contactRoutes);
+apiRouter.use('/contact', contactRoutes);
+
+apiRouter.get('/settings', (req, res) => {
+  res.json({
+    contact_email: 'ggamepconsultant@gmail.com',
+    contact_phone: '+91 8489274385',
+    whatsapp_number: '918489274385',
+    office_address: 'Flat No B, Vallabari Apartment, Vallal Pari Street, Ram Nagar, Madipakkam, Chennai 600091'
+  });
+});
+
+apiRouter.get('/pages/:slug', (req, res) => {
+  res.json({ status: 'ok', slug: req.params.slug });
+});
+
+apiRouter.get('/services', (req, res) => {
+  res.json([]);
+});
+
+apiRouter.get('/projects', (req, res) => {
+  res.json([]);
+});
+
+// Support both prefixes (/gga/api and /api)
+app.use('/gga/api', apiRouter);
+app.use('/api', apiRouter);
+
+// Root route for sanity check
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'GGA MEP Backend is live' });
+});
+app.get('/gga', (req, res) => {
+  res.json({ status: 'ok', message: 'GGA MEP Backend (/gga) is live' });
+});
 
 // Test Database Connection, Auto-Sync Tables, and Start Server
 async function startServer() {
