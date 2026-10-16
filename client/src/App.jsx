@@ -1663,6 +1663,20 @@ function AboutPage() {
                   </div>
                 </div>
 
+                {/* Specialized Engineering Disciplines Box */}
+                <div className="exp-disciplines-box">
+                  <div className="disciplines-box-header">
+                    <span className="box-kicker">CORE DISCIPLINES</span>
+                    <span className="box-badge-live">✦ ISO / NBC 2016</span>
+                  </div>
+                  <div className="exp-disciplines-tags">
+                    <span className="exp-tag">💧 Plumbing (PHE)</span>
+                    <span className="exp-tag">⚡ Electrical Systems</span>
+                    <span className="exp-tag">🔥 Fire Fighting</span>
+                    <span className="exp-tag">🚨 Fire Alarm (FAS)</span>
+                  </div>
+                </div>
+
                 <div className="exp-stats-mini-grid">
                   <div className="exp-mini-stat">
                     <span className="mini-stat-num">100+</span>
