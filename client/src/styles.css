@@ -3372,28 +3372,28 @@ html {
 
 .exp-years-badge {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 16px;
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .exp-years-num {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 92px;
+  font-size: 68px;
   font-weight: 800;
-  line-height: 0.9;
+  line-height: 1;
   color: #ffdf24;
-  letter-spacing: -2px;
-  text-shadow: 0 0 28px rgba(255, 223, 36, 0.45);
-  display: inline-block;
-  position: relative;
+  letter-spacing: -1.5px;
+  text-shadow: 0 0 24px rgba(255, 223, 36, 0.45);
+  display: inline-flex;
+  align-items: baseline;
+  flex-shrink: 0;
 }
 
 .exp-plus {
-  font-size: 48px;
+  font-size: 38px;
   font-weight: 700;
   color: #ffffff;
-  vertical-align: super;
   margin-left: 2px;
 }
 
@@ -3415,23 +3415,28 @@ html {
 .exp-years-label {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  border-left: 2px solid rgba(255, 223, 36, 0.35);
+  padding-left: 14px;
 }
 
 .exp-sub {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1.6px;
+  letter-spacing: 1.4px;
   color: #94a3b8;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
+  white-space: nowrap;
 }
 
 .exp-main {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #ffffff;
   line-height: 1.25;
+  white-space: nowrap;
 }
 
 .exp-stats-mini-grid {

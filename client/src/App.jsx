@@ -1425,6 +1425,38 @@ function ServicesPage() {
   );
 }
 
+function AnimatedCounter({ end = 15, duration = 1800, suffix = '+' }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTimestamp = null;
+    let animationFrameId;
+
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      // Ease out cubic
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(easeOut * end));
+
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(step);
+      } else {
+        setCount(end);
+      }
+    };
+
+    animationFrameId = window.requestAnimationFrame(step);
+    return () => window.cancelAnimationFrame(animationFrameId);
+  }, [end, duration]);
+
+  return (
+    <span className="exp-years-num animate-pulse-glow">
+      {count}<span className="exp-plus">{suffix}</span>
+    </span>
+  );
+}
+
 function AboutPage() {
   const settings = useData('/settings', {});
 
@@ -1605,7 +1637,7 @@ function AboutPage() {
               
               <div className="exp-left-col">
                 <div className="exp-years-badge">
-                  <span className="exp-years-num animate-pulse-glow">15<span className="exp-plus">+</span></span>
+                  <AnimatedCounter end={15} duration={1600} suffix="+" />
                   <div className="exp-years-label">
                     <span className="exp-sub">YEARS OF PROVEN</span>
                     <strong className="exp-main">Engineering Excellence</strong>
