@@ -5,7 +5,7 @@ import ToptoScroll from './ToptoScroll.jsx';
 import API from './config.js';
 const WA = 'https://wa.me/918489274385?text=' + encodeURIComponent('Hello GGA, I would like to discuss an MEP design requirement.');
 const FALLBACK = {
-  'home': { title:'GGA MEP Design Consultants', subtitle:'Thoughtful MEP design for buildings that work better.', body:'Coordinated plumbing, electrical, firefighting and building-services design support for projects across India and the Gulf.' },
+  'home': { title:'GGA MEP Design Consultants', subtitle:'Thoughtful MEP design for buildings that work better.', body:'Coordinated plumbing, electrical, HVAC, firefighting and building-services design support for projects across India and the Gulf.' },
   'about-us': { title:'About GGA MEP Design Consultants', subtitle:'Designing Smarter Buildings. Engineering Safer Futures.', body:'GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, Firefighting, and Fire Alarm System Design. We focus on delivering innovative, efficient, cost-effective, and safety-oriented engineering design solutions for residential, commercial, industrial, and institutional developments.' },
   'services': { title:'MEP Design Services', subtitle:'Integrated building-services design support.', body:'Explore plumbing, electrical, firefighting, fire alarm and HVAC service areas.' },
   'projects': { title:'Selected Projects', subtitle:'Experience across diverse building types.', body:'The company profile lists residential, commercial, institutional, industrial and public-building projects across multiple locations.' },
