@@ -6,7 +6,7 @@ import API from './config.js';
 const WA = 'https://wa.me/918489274385?text=' + encodeURIComponent('Hello GGA, I would like to discuss an MEP design requirement.');
 const FALLBACK = {
   'home': { title:'GGA MEP Design Consultants', subtitle:'Thoughtful MEP design for buildings that work better.', body:'Coordinated plumbing, electrical, HVAC, firefighting and building-services design support for projects across India and the Gulf.' },
-  'about-us': { title:'About GGA MEP Design Consultants', subtitle:'Designing Smarter Buildings. Engineering Safer Futures.', body:'GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, Firefighting, and Fire Alarm System Design. We focus on delivering innovative, efficient, cost-effective, and safety-oriented engineering design solutions for residential, commercial, industrial, and institutional developments.' },
+  'about-us': { title:'About GGA MEP Design Consultants', subtitle:'Designing Smarter Buildings. Engineering Safer Futures.', body:'GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, HVAC, Firefighting, and Fire Alarm System Design. We focus on delivering innovative, efficient, cost-effective, and safety-oriented engineering design solutions for residential, commercial, industrial, and institutional developments.' },
   'services': { title:'MEP Design Services', subtitle:'Integrated building-services design support.', body:'Explore plumbing, electrical, firefighting, fire alarm and HVAC service areas.' },
   'projects': { title:'Selected Projects', subtitle:'Experience across diverse building types.', body:'The company profile lists residential, commercial, institutional, industrial and public-building projects across multiple locations.' },
   'contact-us': { title:'Contact GGA', subtitle:'Discuss your next MEP design requirement.', body:'Contact us to discuss project scope, design coordination, technical support and documentation requirements.' }
@@ -1576,7 +1576,7 @@ function AboutPage() {
             </span>
             <h1>Designing Smarter Buildings. Engineering Safer Futures.</h1>
             <p>
-              GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, Firefighting, and Fire Alarm System Design.
+              GGA MEP Design Consultants provides specialized engineering consultancy services in Plumbing, Electrical, HVAC, Firefighting, and Fire Alarm System Design.
             </p>
           </div>
           <PencilMark />
@@ -1607,7 +1607,7 @@ function AboutPage() {
 
               <div className="profile-paragraphs">
                 <p className="profile-lead-p">
-                  <strong>GGA MEP Design Consultants</strong> provides specialized engineering consultancy services in <strong>Plumbing, Electrical, Firefighting, and Fire Alarm System Design</strong>.
+                  <strong>GGA MEP Design Consultants</strong> provides specialized engineering consultancy services in <strong>Plumbing, Electrical, HVAC, Firefighting, and Fire Alarm System Design</strong>.
                 </p>
                 <p>
                   We focus on delivering innovative, efficient, cost-effective, and safety-oriented engineering design solutions for residential, commercial, industrial, and institutional developments.
@@ -1639,7 +1639,7 @@ function AboutPage() {
               <div className="identity-stats-list">
                 <div className="identity-stat-row">
                   <span className="stat-label">Specialized Disciplines</span>
-                  <span className="stat-val">PHE · Electrical · Firefighting · Fire Alarm</span>
+                  <span className="stat-val">PHE · Electrical · HVAC · Firefighting · Fire Alarm</span>
                 </div>
                 <div className="identity-stat-row">
                   <span className="stat-label">Project Typologies</span>
