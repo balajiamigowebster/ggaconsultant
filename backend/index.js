@@ -122,8 +122,14 @@ app.get('/gga', (req, res) => {
   res.json({ status: 'ok', message: 'GGA MEP Backend (/gga) is live' });
 });
 
-// Test Database Connection, Auto-Sync Tables, and Start Server
-async function startServer() {
+// Start server immediately so Passenger/cPanel captures the listener without startup timeout
+const server = app.listen(PORT, () => {
+  console.log(`✓ GGA MEP Backend Server running on http://localhost:${PORT}`);
+  console.log(`✓ Endpoint ready: POST http://localhost:${PORT}/api/contact`);
+});
+
+// Test Database Connection and Auto-Sync Tables in the background
+(async () => {
   try {
     await sequelize.authenticate();
     console.log('✓ MySQL database connected successfully via Sequelize.');
@@ -133,15 +139,8 @@ async function startServer() {
     console.log('✓ Sequelize models synchronized with database tables.');
   } catch (error) {
     console.warn('! Database connection / sync warning:', error.message);
-    console.log('ℹ Please verify that MySQL (XAMPP/WAMP) is running and database "gga-db" exists.');
+    console.log('ℹ Please verify database credentials in .env.');
   }
-
-  app.listen(PORT, () => {
-    console.log(`✓ GGA MEP Backend Server running on http://localhost:${PORT}`);
-    console.log(`✓ Endpoint ready: POST http://localhost:${PORT}/api/contact`);
-  });
-}
-
-startServer();
+})();
 
 module.exports = app;
