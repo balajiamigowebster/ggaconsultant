@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ServicesDashboard from './ServicesDashboard.jsx';
 import ProjectsDashboard from './ProjectsDashboard.jsx';
 import { useServices } from './servicesStore.js';
 import { useProjects } from './projectsStore.js';
+import { useAuth } from '../login/authStore.js';
 import './Dashboard.css';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('services');
   const { services } = useServices();
   const { projects } = useProjects();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to log out from GGA Admin Panel?')) {
+      logout();
+      navigate('/');
+    }
+  };
 
   useEffect(() => {
     document.title = "Admin Dashboard | GGA MEP Design Consultants";
@@ -38,15 +48,24 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]"></span>
-              <span>Live Synced</span>
+              <span>{user?.username ? `@${user.username}` : 'Live Synced'}</span>
             </div>
             <Link
               to="/"
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-300 bg-slate-800/80 hover:bg-slate-800 hover:text-white border border-slate-700/60 rounded-lg transition-all"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-slate-300 bg-slate-800/80 hover:bg-slate-800 hover:text-white border border-slate-700/60 rounded-lg transition-all"
             >
               <span>View Website</span>
               <span aria-hidden="true">↗</span>
             </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-300 bg-red-950/40 hover:bg-red-900/60 border border-red-800/60 rounded-lg transition-all"
+              title="Sign out from admin panel"
+            >
+              <span>Logout</span>
+              <span>🚪</span>
+            </button>
           </div>
         </div>
       </header>

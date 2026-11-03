@@ -3777,3 +3777,55 @@ html {
   background: #06101e !important;
   box-shadow: none !important;
 }
+
+/* Top Navbar Login Action Button */
+.nav-links .nav-login-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: #0b192c !important; /* Bold navy */
+  color: #ffdf24 !important;     /* GGA Gold */
+  border: 1.5px solid #ffdf24 !important;
+  border-radius: 9999px !important;
+  padding: 6px 16px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  font-family: inherit !important;
+}
+
+.nav-links .nav-login-btn .nav-login-icon {
+  font-size: 13px !important;
+}
+
+.nav-links .nav-login-btn:hover {
+  background: #ffdf24 !important;
+  color: #0b192c !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(255, 223, 36, 0.35) !important;
+}
+
+/* Top Navbar Logout Action Button */
+.nav-links .nav-logout-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+  color: #dc2626 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  border-radius: 9999px !important;
+  padding: 5px 12px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  font-family: inherit !important;
+}
+
+.nav-links .nav-logout-btn:hover {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #dc2626 !important;
+}

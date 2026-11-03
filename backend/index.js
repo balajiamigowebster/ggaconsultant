@@ -5,11 +5,14 @@ const fs = require('fs');
 const path = require('path');
 const sequelize = require('./config/database');
 const { Op } = require('sequelize');
+const bcrypt = require('bcryptjs');
 const contactRoutes = require('./routes/contactRoutes');
+const authRoutes = require('./routes/authRoutes');
 const Service = require('./models/Service');
 const defaultServices = require('./models/defaultServices');
 const Project = require('./models/Project');
 const defaultProjects = require('./models/defaultProjects');
+const User = require('./models/User');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -35,6 +38,7 @@ apiRouter.get('/health', (req, res) => {
 });
 
 apiRouter.use('/contact', contactRoutes);
+apiRouter.use('/auth', authRoutes);
 
 apiRouter.get('/settings', (req, res) => {
   res.json({
@@ -376,6 +380,7 @@ app.get('/gga', (req, res) => {
 // Start server immediately so Passenger/cPanel captures the listener without startup timeout
 const server = app.listen(PORT, () => {
   console.log(`✓ GGA MEP Backend Server running on http://localhost:${PORT}`);
+  console.log(`✓ Endpoint ready: POST http://localhost:${PORT}/api/auth/login`);
   console.log(`✓ Endpoint ready: POST http://localhost:${PORT}/api/contact`);
   console.log(`✓ Endpoint ready: GET/POST/PUT/DELETE http://localhost:${PORT}/api/services`);
   console.log(`✓ Endpoint ready: GET/POST/PUT/DELETE http://localhost:${PORT}/api/projects`);
@@ -390,6 +395,26 @@ const server = app.listen(PORT, () => {
     // Automatically create or update the tables in 'gga-db' if they do not exist
     await sequelize.sync({ alter: true });
     console.log('✓ Sequelize models synchronized with database tables.');
+
+    // Auto-seed admin user from .env credentials if not already present
+    const adminUser = process.env.ADMIN_USERNAME || 'admin';
+    const adminPass = process.env.ADMIN_PASSWORD || 'gga@admin2026';
+    const adminEmail = process.env.ADMIN_EMAIL || 'admin@ggamepconsultant.com';
+
+    let existingAdmin = await User.findOne({ where: { username: adminUser } });
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash(adminPass, 10);
+      await User.create({
+        username: adminUser,
+        email: adminEmail,
+        password: hashedPassword,
+        role: 'admin',
+        isActive: true
+      });
+      console.log(`✓ Seeded admin user "${adminUser}" with secure bcrypt password into MySQL "users" table.`);
+    } else {
+      console.log(`✓ MySQL "users" table contains active admin account: "${existingAdmin.username}".`);
+    }
 
     // Auto-seed default services if table is empty
     const serviceCount = await Service.count();

@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, NavLink, Route, Routes, useParams, useSearchParams, useLocation } from 'react-router-dom';
+import { Link, NavLink, Route, Routes, useParams, useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import Dashboard from './dashboard/Dashboard.jsx';
 import { useServices, SERVICE_CATEGORIES } from './dashboard/servicesStore.js';
 import { useProjects } from './dashboard/projectsStore.js';
+import { useAuth } from './login/authStore.js';
+import LoginModal from './login/LoginModal.jsx';
+import ProtectedRoute from './login/ProtectedRoute.jsx';
 import ToptoScroll from './ToptoScroll.jsx';
 
 import API from './config.js';
@@ -147,35 +150,90 @@ function PencilMark() {
 
 function Header({ settings }) {
   const [open, setOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
   const nav = [
     ['Home', '/'],
     ['About Us', '/about-us'],
     ['Services', '/services'],
     ['Projects', '/projects'],
-    ['Contact Us', '/contact-us'],
-    ['Dashboard', '/dashboard']
+    ['Contact Us', '/contact-us']
   ];
-  return <header className="site-header"><div className="container nav-wrap">
-    <Link to="/" className="brand" aria-label="GGA home">
-      <img src="/images/gga-logo.jpg" alt="GGA - GET GREAT ADVICE" className="brand-logo-img" />
-    </Link>
-    <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Toggle menu">☰</button>
-    <nav className={open ? 'nav-links open' : 'nav-links'}>
-      {nav.map(([label, path]) => (
-        <NavLink
-          key={path}
-          to={path}
-          end={path === '/'}
-          className={({ isActive }) => path === '/dashboard' ? `nav-dashboard-link ${isActive ? 'active' : ''}` : (isActive ? 'active' : '')}
-          onClick={() => setOpen(false)}
-        >
-          {path === '/dashboard' && <span className="nav-dashboard-dot" aria-hidden="true"></span>}
-          {label}
-        </NavLink>
-      ))}
-    </nav>
-    <a className="nav-cta" href={WA} target="_blank" rel="noreferrer">WhatsApp us ↗</a>
-  </div></header>;
+
+  return (
+    <>
+      <header className="site-header">
+        <div className="container nav-wrap">
+          <Link to="/" className="brand" aria-label="GGA home">
+            <img src="/images/gga-logo.jpg" alt="GGA - GET GREAT ADVICE" className="brand-logo-img" />
+          </Link>
+          <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Toggle menu">☰</button>
+          <nav className={open ? 'nav-links open' : 'nav-links'}>
+            {nav.map(([label, path]) => (
+              <NavLink
+                key={path}
+                to={path}
+                end={path === '/'}
+                className={({ isActive }) => (isActive ? 'active' : '')}
+                onClick={() => setOpen(false)}
+              >
+                {label}
+              </NavLink>
+            ))}
+
+            {isAuthenticated ? (
+              <>
+                <NavLink
+                  to="/dashboard"
+                  className={({ isActive }) => `nav-dashboard-link ${isActive ? 'active' : ''}`}
+                  onClick={() => setOpen(false)}
+                >
+                  <span className="nav-dashboard-dot" aria-hidden="true"></span>
+                  Dashboard
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    logout();
+                    navigate('/');
+                  }}
+                  className="nav-logout-btn"
+                  title="Sign out from admin panel"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  setLoginModalOpen(true);
+                }}
+                className="nav-login-btn"
+              >
+                <span className="nav-login-icon">🔒</span>
+                <span>Login</span>
+              </button>
+            )}
+          </nav>
+          <a className="nav-cta" href={WA} target="_blank" rel="noreferrer">WhatsApp us ↗</a>
+        </div>
+      </header>
+
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+        onSuccess={() => {
+          setLoginModalOpen(false);
+          navigate('/dashboard');
+        }}
+      />
+    </>
+  );
 }
 
 function useData(path, fallback) {
@@ -2314,8 +2372,8 @@ export default function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/contact-us" element={<Contact />} />
-          <Route path="/dashboard/*" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         </Routes>
       </main>
       {!isDashboard && <Footer settings={settings} />}
