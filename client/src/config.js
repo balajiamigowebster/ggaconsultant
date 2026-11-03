@@ -1,5 +1,11 @@
-// Backend API configuration
-export const BACKEND_URL = 'https://amigowebster.in/gga';
-export const API_BASE_URL = import.meta.env.VITE_API_URL || `${BACKEND_URL}/api`;
+// Backend API configuration with automatic local & live detection
+const isLocalhost = typeof window !== 'undefined' && 
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+export const BACKEND_URL = isLocalhost 
+  ? 'http://localhost:5000' 
+  : 'https://amigowebster.in/gga';
+
+export const API_BASE_URL = import.meta.env.VITE_API_URL || (isLocalhost ? 'http://localhost:5000/api' : `${BACKEND_URL}/api`);
 
 export default API_BASE_URL;

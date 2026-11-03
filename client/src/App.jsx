@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, NavLink, Route, Routes, useParams, useSearchParams } from 'react-router-dom';
+import { Link, NavLink, Route, Routes, useParams, useSearchParams, useLocation } from 'react-router-dom';
+import Dashboard from './dashboard/Dashboard.jsx';
+import { useServices, SERVICE_CATEGORIES } from './dashboard/servicesStore.js';
+import { useProjects } from './dashboard/projectsStore.js';
 import ToptoScroll from './ToptoScroll.jsx';
 
 import API from './config.js';
@@ -11,6 +14,60 @@ const FALLBACK = {
   'projects': { title:'Selected Projects', subtitle:'Experience across diverse building types.', body:'The company profile lists residential, commercial, institutional, industrial and public-building projects across multiple locations.' },
   'contact-us': { title:'Contact GGA', subtitle:'Discuss your next MEP design requirement.', body:'Contact us to discuss project scope, design coordination, technical support and documentation requirements.' }
 };
+
+function renderServiceIcon(service) {
+  if (service?.icon && typeof service.icon !== 'string') {
+    return service.icon;
+  }
+  const key = (service?.disciplineKey || service?.slug || '').toLowerCase();
+  if (key.includes('plumb')) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+        <path d="M12 11v6"/>
+        <path d="M9 14h6"/>
+      </svg>
+    );
+  }
+  if (key.includes('elect')) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+      </svg>
+    );
+  }
+  if (key.includes('fight') || key.includes('flame')) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+      </svg>
+    );
+  }
+  if (key.includes('alarm') || key.includes('bell')) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        <line x1="12" y1="2" x2="12" y2="4"/>
+      </svg>
+    );
+  }
+  if (key.includes('hvac') || key.includes('air') || key.includes('wind')) {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 2a4.5 4.5 0 0 0 0 9 4.5 4.5 0 0 1 0 9"/>
+        <path d="M22 12a4.5 4.5 0 0 0-9 0 4.5 4.5 0 0 1-9 0"/>
+      </svg>
+    );
+  }
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="discipline-svg">
+      <circle cx="12" cy="12" r="10" />
+      <polygon points="12 8 8 12 12 16 16 12 12 8" />
+    </svg>
+  );
+}
 
 function EngineeringBackground({ variant = 'hero' }) {
   return (
@@ -90,13 +147,33 @@ function PencilMark() {
 
 function Header({ settings }) {
   const [open, setOpen] = useState(false);
-  const nav = [['Home','/'],['About Us','/about-us'],['Services','/services'],['Projects','/projects'],['Contact Us','/contact-us']];
+  const nav = [
+    ['Home', '/'],
+    ['About Us', '/about-us'],
+    ['Services', '/services'],
+    ['Projects', '/projects'],
+    ['Contact Us', '/contact-us'],
+    ['Dashboard', '/dashboard']
+  ];
   return <header className="site-header"><div className="container nav-wrap">
     <Link to="/" className="brand" aria-label="GGA home">
       <img src="/images/gga-logo.jpg" alt="GGA - GET GREAT ADVICE" className="brand-logo-img" />
     </Link>
     <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label="Toggle menu">☰</button>
-    <nav className={open ? 'nav-links open' : 'nav-links'}>{nav.map(([label,path]) => <NavLink key={path} to={path} end={path==='/'} onClick={()=>setOpen(false)}>{label}</NavLink>)}</nav>
+    <nav className={open ? 'nav-links open' : 'nav-links'}>
+      {nav.map(([label, path]) => (
+        <NavLink
+          key={path}
+          to={path}
+          end={path === '/'}
+          className={({ isActive }) => path === '/dashboard' ? `nav-dashboard-link ${isActive ? 'active' : ''}` : (isActive ? 'active' : '')}
+          onClick={() => setOpen(false)}
+        >
+          {path === '/dashboard' && <span className="nav-dashboard-dot" aria-hidden="true"></span>}
+          {label}
+        </NavLink>
+      ))}
+    </nav>
     <a className="nav-cta" href={WA} target="_blank" rel="noreferrer">WhatsApp us ↗</a>
   </div></header>;
 }
@@ -142,8 +219,8 @@ const clientLogos = [
 
 function Home() {
   const page = useData('/pages/home', FALLBACK.home);
-  const services = useData('/services', []);
-  const projects = useData('/projects', []);
+  const { services: liveServices } = useServices();
+  const { projects: liveProjects } = useProjects();
   return <>
     <section className="hero"><div className="hero-grid"></div><EngineeringBackground variant="hero"/><div className="container hero-inner">
       <div className="hero-copy"><span className="eyebrow"><span className="dot"></span> MEP DESIGN CONSULTANTS</span>
@@ -155,9 +232,9 @@ function Home() {
     </div><div className="hero-bottom-line"></div></section>
     <section className="trust-strip"><div className="container trust-inner"><span>DESIGN SERVICES</span><b>Plumbing</b><b>Electrical</b><b>Fire Fighting</b><b>Fire Alarm</b><b>HVAC</b></div></section>
     <section className="section"><EngineeringBackground variant="light"/><div className="container"><div className="section-heading"><div><span className="eyebrow dark">WHAT WE DO</span><h2>Engineering the details<br/><em>that make buildings work.</em></h2></div><p>Building services need to work together. We support coordinated design development, technical documentation and project communication from concept to execution.</p></div>
-      <div className="service-grid">{(services.length?services:defaultServices).slice(0,5).map((s,i)=>{
+      <div className="service-grid">{(liveServices.length?liveServices:defaultServices).slice(0,5).map((s,i)=>{
         const disciplineKeys = ['plumbing','electrical','fire-fighting','fire-alarm','hvac'];
-        const targetKey = s.slug ? s.slug.replace('-design', '').replace('-systems', '') : disciplineKeys[i];
+        const targetKey = s.disciplineKey || (s.slug ? s.slug.replace('-design', '').replace('-systems', '') : disciplineKeys[i]);
         return (
           <article className="service-card" key={s.id||s.slug}>
             <div className="service-icon">{['💧','⚡','🧯','🔔','❄️'][i]}</div>
@@ -181,7 +258,7 @@ function Home() {
           <Link className="text-link" to="/projects">View project list ↗</Link>
         </div>
         <div className="project-grid">
-          {(projects.length ? projects : defaultProjects).slice(0, 3).map((p, i) => {
+          {(liveProjects.length ? liveProjects : defaultProjects).slice(0, 3).map((p, i) => {
             const projectImg = p.image || `/images/project-${i + 1}.jpeg`;
             return (
               <article className="project-card" key={p.id || p.title}>
@@ -401,6 +478,8 @@ const defaultProjects = [
 ];
 
 function ProjectsPage() {
+  const { projects: liveProjects } = useProjects();
+  const currentProjects = (Array.isArray(liveProjects) && liveProjects.length > 0) ? liveProjects : ggaProjects;
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
@@ -411,35 +490,35 @@ function ProjectsPage() {
   }, []);
 
   const categories = [
-    { id: 'All', label: 'All Projects', count: ggaProjects.length },
-    { id: 'Residential', label: 'Residential', count: ggaProjects.filter((p) => p.category === 'Residential').length },
-    { id: 'Industrial', label: 'Industrial & Campuses', count: ggaProjects.filter((p) => p.category === 'Industrial').length },
-    { id: 'Institutional', label: 'Institutional & Civic', count: ggaProjects.filter((p) => p.category === 'Institutional').length },
-    { id: 'Commercial', label: 'Commercial', count: ggaProjects.filter((p) => p.category === 'Commercial').length }
+    { id: 'All', label: 'All Projects', count: currentProjects.length },
+    { id: 'Residential', label: 'Residential', count: currentProjects.filter((p) => p.category === 'Residential').length },
+    { id: 'Industrial', label: 'Industrial & Campuses', count: currentProjects.filter((p) => p.category === 'Industrial').length },
+    { id: 'Institutional', label: 'Institutional & Civic', count: currentProjects.filter((p) => p.category === 'Institutional').length },
+    { id: 'Commercial', label: 'Commercial', count: currentProjects.filter((p) => p.category === 'Commercial').length }
   ];
 
   const filteredProjects = useMemo(() => {
-    return ggaProjects
+    return currentProjects
       .filter((project) => {
         const matchesCategory = activeCategory === 'All' || project.category === activeCategory;
         const q = searchQuery.toLowerCase().trim();
         const matchesSearch = !q || (
-          project.title.toLowerCase().includes(q) ||
-          project.client.toLowerCase().includes(q) ||
-          project.location.toLowerCase().includes(q) ||
-          project.categoryLabel.toLowerCase().includes(q) ||
-          project.scope.some((s) => s.toLowerCase().includes(q))
+          (project.title || '').toLowerCase().includes(q) ||
+          (project.client || '').toLowerCase().includes(q) ||
+          (project.location || '').toLowerCase().includes(q) ||
+          (project.categoryLabel || '').toLowerCase().includes(q) ||
+          (Array.isArray(project.scope) && project.scope.some((s) => (s || '').toLowerCase().includes(q)))
         );
         return matchesCategory && matchesSearch;
       })
       .sort((a, b) => {
-        if (sortBy === 'area-desc') return b.areaNumber - a.areaNumber;
-        if (sortBy === 'area-asc') return a.areaNumber - b.areaNumber;
-        return a.slNo - b.slNo;
+        if (sortBy === 'area-desc') return (Number(b.areaNumber) || 0) - (Number(a.areaNumber) || 0);
+        if (sortBy === 'area-asc') return (Number(a.areaNumber) || 0) - (Number(b.areaNumber) || 0);
+        return (Number(a.slNo) || 0) - (Number(b.slNo) || 0);
       });
-  }, [activeCategory, searchQuery, sortBy]);
+  }, [currentProjects, activeCategory, searchQuery, sortBy]);
 
-  const totalFilteredArea = filteredProjects.reduce((sum, p) => sum + p.areaNumber, 0);
+  const totalFilteredArea = filteredProjects.reduce((sum, p) => sum + (Number(p.areaNumber) || 0), 0);
 
   return (
     <div className="projects-page-wrapper">
@@ -574,7 +653,7 @@ function ProjectsPage() {
 
           {/* Result Count Banner */}
           <div className="results-status-bar">
-            <span>Showing <strong>{filteredProjects.length}</strong> of <strong>{ggaProjects.length}</strong> projects</span>
+            <span>Showing <strong>{filteredProjects.length}</strong> of <strong>{currentProjects.length}</strong> projects</span>
             <span className="results-total-area">Filtered Cumulative Area: <strong>{totalFilteredArea.toLocaleString('en-IN')} SQ.FT</strong></span>
           </div>
 
@@ -585,8 +664,8 @@ function ProjectsPage() {
                 <article className="portfolio-card" key={project.id}>
                   {/* Top Bar */}
                   <div className="card-header-bar">
-                    <span className="project-sl-pill">#{String(project.slNo).padStart(2, '0')}</span>
-                    <span className={`project-cat-badge cat-${project.category.toLowerCase()}`}>
+                    <span className="project-sl-pill">#{String(project.slNo || '').padStart(2, '0')}</span>
+                    <span className={`project-cat-badge cat-${(project.category || 'residential').toLowerCase()}`}>
                       {project.category}
                     </span>
                     {project.featured && <span className="featured-flag">★ Landmark</span>}
@@ -617,7 +696,7 @@ function ProjectsPage() {
 
                   {/* Scope Badges */}
                   <div className="card-scope-list">
-                    {project.scope.map((s) => (
+                    {(Array.isArray(project.scope) ? project.scope : []).map((s) => (
                       <span className="scope-tag" key={s}>{s}</span>
                     ))}
                   </div>
@@ -664,7 +743,7 @@ function ProjectsPage() {
                         </div>
                       </td>
                       <td className="cell-cat">
-                        <span className={`table-cat-pill cat-${project.category.toLowerCase()}`}>
+                        <span className={`table-cat-pill cat-${(project.category || 'residential').toLowerCase()}`}>
                           {project.category}
                         </span>
                       </td>
@@ -673,7 +752,7 @@ function ProjectsPage() {
                       </td>
                       <td className="cell-scope">
                         <div className="table-scope-tags">
-                          {project.scope.map((s) => (
+                          {(Array.isArray(project.scope) ? project.scope : []).map((s) => (
                             <span key={s}>{s}</span>
                           ))}
                         </div>
@@ -1045,6 +1124,7 @@ const buildingTypologies = [
 ];
 
 function ServicesPage() {
+  const { services: liveServices } = useServices();
   const [searchParams, setSearchParams] = useSearchParams();
   const paramDiscipline = searchParams.get('discipline');
 
@@ -1072,30 +1152,72 @@ function ServicesPage() {
     }
   }, [paramDiscipline]);
 
-  const disciplineTabs = [
-    { id: 'All', label: 'All Disciplines', count: 5, icon: '❖' },
-    { id: 'plumbing', label: '01 Plumbing (PHE)', count: 1, icon: '💧' },
-    { id: 'electrical', label: '02 Electrical & ELV', count: 1, icon: '⚡' },
-    { id: 'fire-fighting', label: '03 Fire Fighting', count: 1, icon: '🧯' },
-    { id: 'fire-alarm', label: '04 Fire Alarm', count: 1, icon: '🔔' },
-    { id: 'hvac', label: '05 HVAC & Ventilation', count: 1, icon: '❄️' }
-  ];
+  const disciplineTabs = useMemo(() => {
+    const iconMap = {
+      plumbing: '💧',
+      electrical: '⚡',
+      'fire-fighting': '🧯',
+      'fire-alarm': '🔔',
+      hvac: '❄️'
+    };
+
+    // Calculate real category counts
+    const categoryCounts = {};
+    liveServices.forEach((s) => {
+      const catKey = s.category || s.disciplineKey || 'General MEP';
+      categoryCounts[catKey] = (categoryCounts[catKey] || 0) + 1;
+    });
+
+    const tabs = [
+      { id: 'All', label: 'All Disciplines', count: liveServices.length, icon: '❖' }
+    ];
+
+    // Collect distinct categories from liveServices
+    const seenCategories = new Set();
+    liveServices.forEach((s) => {
+      const catName = s.category || s.shortTitle || s.title;
+      if (!seenCategories.has(catName)) {
+        seenCategories.add(catName);
+        tabs.push({
+          id: s.disciplineKey || catName,
+          categoryName: catName,
+          label: `${s.disciplineNumber ? s.disciplineNumber + ' ' : ''}${catName}`,
+          count: categoryCounts[catName] || 1,
+          icon: iconMap[s.disciplineKey] || '📐'
+        });
+      }
+    });
+    return tabs;
+  }, [liveServices]);
 
   const filteredServices = useMemo(() => {
-    return ggaServices.filter((service) => {
-      const matchesCategory = activeDiscipline === 'All' || service.disciplineKey === activeDiscipline;
+    return liveServices.filter((service) => {
+      const matchesCategory = activeDiscipline === 'All' ||
+        service.disciplineKey === activeDiscipline ||
+        service.category === activeDiscipline ||
+        (activeDiscipline === 'plumbing' && service.category && service.category.includes('Plumbing')) ||
+        (activeDiscipline === 'electrical' && service.category && service.category.includes('Electrical')) ||
+        (activeDiscipline === 'fire-fighting' && service.category && service.category.includes('Fire Fighting')) ||
+        (activeDiscipline === 'fire-alarm' && service.category && service.category.includes('Fire Alarm')) ||
+        (activeDiscipline === 'hvac' && service.category && service.category.includes('HVAC'));
+
       const q = searchQuery.toLowerCase().trim();
+      const scopeList = Array.isArray(service.coreScope) ? service.coreScope : [];
+      const standardsList = Array.isArray(service.standards) ? service.standards : [];
+      const deliverablesList = Array.isArray(service.deliverables) ? service.deliverables : [];
+
       const matchesSearch = !q || (
-        service.title.toLowerCase().includes(q) ||
-        service.tagline.toLowerCase().includes(q) ||
-        service.description.toLowerCase().includes(q) ||
-        service.coreScope.some((s) => s.toLowerCase().includes(q)) ||
-        service.standards.some((st) => st.code.toLowerCase().includes(q) || st.name.toLowerCase().includes(q)) ||
-        service.deliverables.some((d) => d.toLowerCase().includes(q))
+        (service.title && service.title.toLowerCase().includes(q)) ||
+        (service.category && service.category.toLowerCase().includes(q)) ||
+        (service.tagline && service.tagline.toLowerCase().includes(q)) ||
+        (service.description && service.description.toLowerCase().includes(q)) ||
+        scopeList.some((s) => typeof s === 'string' && s.toLowerCase().includes(q)) ||
+        standardsList.some((st) => typeof st === 'object' && st && ((st.code || '') + ' ' + (st.name || '')).toLowerCase().includes(q)) ||
+        deliverablesList.some((d) => typeof d === 'string' && d.toLowerCase().includes(q))
       );
       return matchesCategory && matchesSearch;
     });
-  }, [activeDiscipline, searchQuery]);
+  }, [activeDiscipline, searchQuery, liveServices]);
 
   return (
     <div className="services-page-wrapper">
@@ -1155,7 +1277,7 @@ function ServicesPage() {
                 {disciplineTabs.map((tab) => (
                   <button
                     key={tab.id}
-                    className={`cat-tab ${activeDiscipline === tab.id ? 'active' : ''}`}
+                    className={`cat-tab ${activeDiscipline === tab.id || (tab.categoryName && activeDiscipline === tab.categoryName) ? 'active' : ''}`}
                     onClick={() => {
                       setActiveDiscipline(tab.id);
                       if (tab.id === 'All') {
@@ -1226,22 +1348,29 @@ function ServicesPage() {
                   <div className="discipline-card-header">
                     <div className="header-meta-left">
                       <div className="discipline-icon-badge" aria-hidden="true">
-                        {service.icon}
+                        {renderServiceIcon(service)}
                       </div>
                       <div className="discipline-meta-titles">
                         <div className="discipline-meta-top">
                           <span className="discipline-number-tag">{service.disciplineNumber}</span>
                           <span className="discipline-badge-kicker">{service.badge}</span>
+                          {service.category && (
+                            <span className="discipline-category-badge">
+                              🏷️ {service.category}
+                            </span>
+                          )}
                         </div>
                         <h2 className="discipline-title">{service.title}</h2>
                         <p className="discipline-tagline">{service.tagline}</p>
                       </div>
                     </div>
                     <div className="header-meta-right">
-                      <div className="stat-pill-badge">
-                        <span className="stat-pill-value">{service.statHighlight.value}</span>
-                        <span className="stat-pill-label">{service.statHighlight.label}</span>
-                      </div>
+                      {service.statHighlight && (
+                        <div className="stat-pill-badge">
+                          <span className="stat-pill-value">{service.statHighlight.value || '100%'}</span>
+                          <span className="stat-pill-label">{service.statHighlight.label || 'Quality Metric'}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -1259,7 +1388,7 @@ function ServicesPage() {
                         <h4>Core Engineering Scope &amp; Systems</h4>
                       </div>
                       <ul className="technical-checklist">
-                        {service.coreScope.map((item, idx) => (
+                        {(Array.isArray(service.coreScope) ? service.coreScope : []).map((item, idx) => (
                           <li key={idx}>
                             <span className="check-bullet" aria-hidden="true">◆</span>
                             <span>{item}</span>
@@ -1277,7 +1406,7 @@ function ServicesPage() {
                           <h4>Governing Codes &amp; Statutory Standards</h4>
                         </div>
                         <div className="standards-chips-grid">
-                          {service.standards.map((std, idx) => (
+                          {(Array.isArray(service.standards) ? service.standards : []).map((std, idx) => (
                             <div className="standard-chip-card" key={idx}>
                               <strong className="std-code">{std.code}</strong>
                               <span className="std-name">{std.name}</span>
@@ -1293,7 +1422,7 @@ function ServicesPage() {
                           <h4>GFC &amp; Documentation Deliverables</h4>
                         </div>
                         <ul className="deliverables-checklist">
-                          {service.deliverables.map((deliv, idx) => (
+                          {(Array.isArray(service.deliverables) ? service.deliverables : []).map((deliv, idx) => (
                             <li key={idx}>
                               <span className="deliv-icon" aria-hidden="true">✔</span>
                               <span>{deliv}</span>
@@ -1315,7 +1444,7 @@ function ServicesPage() {
                         className="btn btn-yellow"
                         to={`/contact-us?service=${service.id}`}
                       >
-                        Request {service.shortTitle} Scope ↗
+                        Request {service.shortTitle || service.title} Scope ↗
                       </Link>
                       <a
                         className="btn btn-outline"
@@ -2171,11 +2300,13 @@ function FloatingActions({ settings }) {
 }
 
 export default function App() {
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith('/dashboard');
   const settings = useData('/settings', {});
   return (
     <>
       <ToptoScroll />
-      <Header settings={settings} />
+      {!isDashboard && <Header settings={settings} />}
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -2183,10 +2314,12 @@ export default function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/contact-us" element={<Contact />} />
+          <Route path="/dashboard/*" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </main>
-      <Footer settings={settings} />
-      <FloatingActions settings={settings} />
+      {!isDashboard && <Footer settings={settings} />}
+      {!isDashboard && <FloatingActions settings={settings} />}
     </>
   );
 }
