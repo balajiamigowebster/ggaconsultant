@@ -2313,8 +2313,24 @@ function Footer({ settings }) {
         </div>
       </div>
       <div className="container footer-bottom">
-        <span>© {new Date().getFullYear()} GGA Design Consultants</span>
-        <span>*Experience statement based on the company profile; verify before publishing.</span>
+        <div className="footer-copyright-group">
+          <span>© {new Date().getFullYear()} GGA Design Consultants</span>
+          <span className="footer-sep">•</span>
+          <span className="footer-designer-wrap">
+            Designed by{' '}
+            <a
+              href="https://amigowebster.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-designer-link"
+            >
+              Amigowebster ↗
+            </a>
+          </span>
+        </div>
+        <span className="footer-disclaimer">
+          *Experience statement based on the company profile; verify before publishing.
+        </span>
       </div>
     </footer>
   );
